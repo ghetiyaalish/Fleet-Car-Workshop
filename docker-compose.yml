@@ -1,0 +1,35 @@
+services:
+  odoo:
+    image: odoo:17.0
+    container_name: odoo17_peanut_odoo
+    depends_on:
+      - db
+    ports:
+      - "8070:8069" # Odoo web port
+    volumes:
+      - odoo17-web-data:/var/lib/odoo
+      - ./custom-addons:/mnt/extra-addons
+      - ./odoo-config:/etc/odoo
+    environment:
+      - HOST=db
+      - PORT=5432
+      - USER=odoo_peanut
+      - PASSWORD=peanut@2602
+    command: -- --dev=all # Uncomment for development mode
+
+  db:
+    image: postgres:13
+    container_name: odoo17_peanut_db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=peanut@2612
+      - POSTGRES_USER=db_peanut
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo17-db-data:/var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"
+
+volumes:
+  odoo17-web-data:
+  odoo17-db-data:
