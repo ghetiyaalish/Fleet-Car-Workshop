@@ -12,6 +12,9 @@
                             class="btn-primary" invisible="state != 'waiting'"/>
                     <button class="btn-primary" name="cancel" string="Cancel"
                             type="object" invisible="state != 'waiting'"/>
+                    <button name="recreate_invoice" string="Recreate Invoice" type="object"
+                            class="btn-primary"
+                            invisible="state != 'cancel'"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="workshop_create_invoices,cancel"/>
                 </header>

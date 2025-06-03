@@ -161,6 +161,9 @@ class CarWorkshop(models.Model):
     def cancel(self):
         """ Function for cancel button """
         self.state = 'cancel'
+    def recreate_invoice(self):
+        self.state = 'waiting'
+    
 
     def action_create_invoices(self):
         """ Function for creating invoice """
