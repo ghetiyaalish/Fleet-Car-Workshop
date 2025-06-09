@@ -17,4 +17,5 @@
               parent="menu_fleet_car_workshop_root" sequence="3"/>
     <menuitem name="Worksheet" id="vehicle_report" parent="report_worksheet"
               action="action_car_workshop_report"/>
+
 </odoo>
