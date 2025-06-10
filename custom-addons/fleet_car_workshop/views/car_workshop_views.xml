@@ -114,6 +114,17 @@
                                 <field name="date_last_stage_update"/>
                             </group>
                         </page>
+                        <page string="Accident" name="accident_page">
+                            <group string="Car Details">
+                                <field name="planned_work_ids">
+                                    <tree string="Planned Work" editable="bottom">
+                                        <field name="user_id" />
+                                        <field name="time_spent" />
+                                        <field name="work_cost" />
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -315,7 +326,8 @@
     <menuitem id="menu_car_workshop" name="Worksheet"
               parent="menu_car_workshop_root"
               action="car_workshop_action_form"/>
+    
     <menuitem id="menu_config_settings" name="Configuration"
               groups="fleet_car_workshop.fleet_car_workshop_manager"
-              parent="menu_fleet_car_workshop_root" sequence="4"/>
+              parent="menu_fleet_car_workshop_root" sequence="5"/>
 </odoo>

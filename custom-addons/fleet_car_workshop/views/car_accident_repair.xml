@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Kanban View for Accident Request - Using New Field Names -->
+    <record id="accident_request_view_kanban" model="ir.ui.view">
+        <field name="name">accident.request.view.kanban</field>
+        <field name="model">accident.request</field>
+        <field name="arch" type="xml">
+            <!-- default_group_by uses the new field name -->
+            <kanban default_group_by="acc_stage_id" class="o_kanban_small_column o_accident_request_kanban" records_draggable="1">
+                <!-- Fields available in the template - Using New Field Names -->
+                <field name="id"/>
+                <field name="acc_partner_id"/>
+                <field name="acc_vehicle_details"/>
+                <field name="acc_request_date"/>
+                <field name="acc_stage_id"/>
+                <field name="acc_priority"/>
+                <field name="acc_kanban_state"/>
+                <field name="acc_kanban_state_label"/>
+                <field name="acc_attachment_number"/> <!-- Added for attachments -->
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                 <!-- Corrected typo: o_kanban_card_header_title -->
+                                <div class="o_kanban_card_header_title">
+                                    <!-- Corrected class: o_primary -->
+                                    <div class="o_primary">
+                                        <field name="acc_partner_id"/> <!-- Use new field name -->
+                                    </div>
+                                    <div class="o_secondary text-muted">
+                                        <field name="acc_vehicle_details"/> - <field name="acc_request_date" widget="date"/> <!-- Use new field names -->
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_pane dropdown-toggle js-kanban-colorpicker">
+                                    <a role="button" data-toggle="dropdown" href="#">
+                                        <i class="fa fa-bars fa-lg" aria-label="Dropdown menu"/>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a role="menuitem" type="edit">Edit</a></li>
+                                        <li><a role="menuitem" type="delete">Delete</a></li>
+                                         <!-- data-field uses the new field name -->
+                                        <li><ul class="oe_kanban_colorpicker" data-field="acc_priority"/></li>
+                                    </ul>
+                                </div>
+                                <div class="o_kanban_card_header_manage">
+                                    <div class="o_kanban_manage_group">
+                                        <!-- Priority Star - Using new field name and comparing string values -->
+                                        <i t-attf-class="fa fa-star {{record.acc_priority.raw_value == '3' ? 'text-danger' : ''}} {{record.acc_priority.raw_value == '2' ? 'text-warning' : ''}} {{record.acc_priority.raw_value == '1' ? 'text-primary' : ''}} {{record.acc_priority.raw_value == '0' ? 'text-muted' : ''}}" role="img" aria-label="Priority"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="oe_kanban_content">
+                                 <!-- Using new field name -->
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="acc_kanban_state_label"/>
+                                </div>
+                                <!-- Add description preview if needed -->
+                                <!-- <div class="text-muted"><field name="acc_description"/></div> -->
+                            </div>
+
+                            <!-- Added attachment handling - Uses new field name for attachment count -->
+                            <div class="oe_kanban_bottom_right">
+                                 <a role="button" class="oe_kanban_inline_field o_kanban_attachment"
+                                    t-if="record.acc_attachment_number.raw_value > 0"
+                                    t-attf-href="/web#model=accident.request&amp;id=#{record.id}&amp;action=#{_ref('accident_request_action')}&amp;active_id=#{_ref('accident_request_action')}&amp;view_type=form#document_tab"> <!-- Corrected & to & -->
+                                      <i class="fa fa-paperclip" aria-label="Attachments"/>
+                                      <t t-esc="record.acc_attachment_number.raw_value"/>
+                                  </a>
+                                 <a role="button" class="oe_kanban_inline_field o_kanban_attachment"
+                                    t-if="record.acc_attachment_number.raw_value == 0"
+                                    name="action_open_attachments" type="object">
+                                      <i class="fa fa-camera" aria-label="Add Attachments"/>
+                                  </a>
+                            </div>
+...
+                            <div class="oe_clear"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View for Accident Request - Using New Field Names -->
+    <record id="accident_request_view_form" model="ir.ui.view">
+        <field name="name">accident.request.view.form</field>
+        <field name="model">accident.request</field>
+        <field name="arch" type="xml">
+            <form string="Accident Request">
+                 <!-- Use new field name -->
+                <header>
+                    <field name="acc_stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'acc_stage_fold'}"/>
+                </header>
+                <sheet>
+                     <!-- Added button box for stats like attachments - Uses new field name -->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_open_attachments" type="object" icon="fa-paperclip">
+                            <field name="acc_attachment_number" widget="statinfo"/>
+                            <span class="o_stat_text">Attachments</span>
+                        </button>
+                         <!-- Add other stat buttons here if needed -->
+                    </div>
+                    <div class="oe_title">
+                         <h1>
+                             <field name="acc_name" readonly="1"/> <!-- New name field -->
+                         </h1>
+                     </div>
+                    <group>
+                        <group>
+                            <field name="acc_partner_id"/> <!-- New field name -->
+                            <field name="acc_vehicle_details"/> <!-- New field name -->
+                            <field name="acc_request_date"/> <!-- New field name -->
+                        </group>
+                        <group>
+                            <field name="acc_priority" widget="priority"/> <!-- New field name -->
+                            <field name="acc_kanban_state" invisible="1"/> <!-- New field name -->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="acc_description"/> <!-- New field name -->
+                        </page>
+                        <!-- Added Chatter and Activity page -->
+                         <page string="Chatter &amp; Activity">
+                            <field name="message_ids" widget="mail_thread" options='{"avatar_autodetail": true}'/>
+                            <field name="activity_ids" widget="mail_activity"/>
+                         </page>
+                        <!-- Add other pages here -->
+                    </notebook>
+                </sheet>
+                <!-- Added Chatter outside sheet -->
+                 <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for Accident Request - Using New Field Names -->
+    <record id="accident_request_view_tree" model="ir.ui.view">
+        <field name="name">accident.request.view.tree</field>
+        <field name="model">accident.request</field>
+        <field name="arch" type="xml">
+            <tree string="Accident Requests">
+                <field name="acc_name"/> <!-- New field name -->
+                <field name="acc_partner_id"/> <!-- New field name -->
+                <field name="acc_vehicle_details"/> <!-- New field name -->
+                <field name="acc_request_date"/> <!-- New field name -->
+                <field name="acc_stage_id"/> <!-- New field name -->
+                <field name="acc_priority" widget="priority"/> <!-- New field name -->
+                <field name="acc_kanban_state_label"/> <!-- New field name -->
+                <field name="acc_attachment_number" optional="hide"/> <!-- New field name -->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to display Accident Requests -->
+    <record id="accident_request_action" model="ir.actions.act_window">
+        <field name="name">Accident Requests</field>
+        <field name="res_model">accident.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new accident request.
+            </p><p>
+                Track accident cases for vehicles involved in accidents.
+            </p>
+        </field>
+    </record>
+
+    <!-- ### Menu Items ### -->
+    <!-- This part might go in a separate menu XML file -->
+
+    <!-- Top Menu Item: Accident (folder) -->
+    <!-- VERIFY THE PARENT ID 'menu_fleet_car_workshop_root' -->
+    <!-- Adjust sequence to place it correctly (e.g., after Report, before Config) -->
+    <menuitem id="accident_car_workshop_root"
+              name="Accident"
+              parent="menu_fleet_car_workshop_root" 
+              sequence="60" 
+              groups="base.group_user" />
+
+    <!-- Sub-menu item under Accident, leading to the Accident Requests views -->
+    <menuitem id="menu_car_workshop_accident_requests"
+              name="Accident Requests"
+              parent="accident_car_workshop_root"
+              action="accident_request_action"
+              sequence="10"/>
+
+</odoo>
