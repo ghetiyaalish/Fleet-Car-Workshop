@@ -44,7 +44,7 @@
         'views/worksheet_stages_views.xml',
         'views/worksheet_tag_views.xml',
         'views/car_workshop_reports.xml',
-        # 'views/car_accident_repair.xml',
+        'views/car_accident_repair.xml',
 
     ],
     'images': ['static/description/banner.png'],

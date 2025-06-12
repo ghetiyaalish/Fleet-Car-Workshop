@@ -41,7 +41,89 @@ class MaterialUsed(models.Model):
     material_id = fields.Many2one('car.workshop',
                                   help='The work details of material')
 
+    
+    acc_name = fields.Char(string="Title", tracking=True, required=True, help='Give Name of the work')
+
+    acc_user_id = fields.Many2one('res.users', string='User ID',
+                              default=lambda self: self.env.user, tracking=True,
+                              help='Give Name of the user')
+    acc_partner_id = fields.Many2one(
+        'res.partner',
+        string="Customer ID",
+        required=True,
+        tracking=True
+    )
+
+    acc_vehicle_details = fields.Char(
+        string="Vehicle",
+        required=True
+    )
+
+    acc_description = fields.Text(
+        string="Accident Description"
+    )
+    
+    acc_request_date = fields.Datetime(
+        string="Request Date & Time",
+        required=True,
+        default=fields.Datetime.now,
+        tracking=True
+    )
+
+    # acc_stage_id = fields.Many2one(
+    #     'material.used.stage',
+    #     string='Stage',
+    #     required=True,
+    #     tracking=True,
+    #     default=lambda self: self._default_stage_id()
+    # )
+
+    acc_priority = fields.Selection(
+        [
+            ('0', 'Low'),
+            ('1', 'Normal'),
+            ('2', 'High'),
+            ('3', 'Very High')
+        ],
+        default='0',
+        index=True,
+        tracking=True,
+        string="Priority"
+    )
+
+    acc_kanban_state = fields.Selection(
+        [
+            ('normal', 'In Progress'),
+            ('done', 'Ready'),
+            ('blocked', 'Blocked')
+        ],
+        string='Kanban State',
+        copy=False,
+        default='normal',
+        required=True,
+        tracking=True,
+        help="A colored flag indicating the state of the request."
+    )
+
+    acc_progress = fields.Integer(string="Progress Bar(%)", copy=False,
+                              readonly=True, help='Work progress info')
+    
+
     @api.onchange('material_product_id')
     def _onchange_material_product_id(self):
         """ Function for update total price"""
         self.price = self.material_product_id.lst_price
+
+    
+    def action_low_record(self):
+        self.acc_priority = '0'
+
+    def action_normal_record(self):
+        self.acc_priority = '1'
+
+    def action_high_record(self):
+        self.acc_priority = '2'
+    
+    def action_veryhigh_record(self):
+        self.acc_priority = '3'
+        

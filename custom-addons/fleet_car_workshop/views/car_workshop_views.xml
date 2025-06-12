@@ -162,7 +162,7 @@
                                 <div>
                                     <field name="tag_ids"
                                            options="{'color_field': 'color'}"/>
-                                </div>
+                                </div>  
                                 <div>
                                     <strong>
                                         <field name="name"/>
