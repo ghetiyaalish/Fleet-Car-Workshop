@@ -1,0 +1,104 @@
+<!-- views/invoice_report_templates.xml -->
+<odoo>
+    <template id="custom_invoice_report" inherit_id="l10n_in.l10n_in_report_invoice_document_inherit">
+        <xpath expr="//div[contains(@class, 'page')]" position="replace">
+            <div class="modern-invoice" style="font-family: 'Segoe UI', sans-serif; max-width: 900px; margin: auto;">
+
+                <!-- Header -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ccc;">
+                    <div>
+                        <t t-if="o.company_id.logo">
+                            <img t-att-src="'/fleet_car_workshop/static/description/aston martin.jpg'" style="height: 200px;width:400px" />
+                        </t>
+                        <t t-else="">
+                            <h2 t-field="o.company_id.name"/>
+                        </t>
+                    </div>
+                    <div style="text-align: right;">
+                        <h1>
+                            <t t-if="o.move_type == 'out_invoice' and o.state == 'posted'">INVOICE</t>
+                            <t t-elif="o.move_type == 'out_invoice'">DRAFT INVOICE</t>
+                            <t t-elif="o.move_type == 'out_refund'">CREDIT NOTE</t>
+                            <t t-else="">DOCUMENT</t>
+                        </h1>
+                        <p><span t-field="o.name"/></p>
+                    </div>
+                </div>
+
+                <!-- Addresses -->
+                <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                    <div>
+                        <strong>From:</strong>
+                        <div t-field="o.company_id.partner_id"
+                             t-options="{'widget': 'contact', 'fields': ['address', 'name'], 'no_marker': True}" />
+                    </div>
+                    <div>
+                        <strong>To:</strong>
+                        <div t-field="o.partner_id"
+                             t-options="{'widget': 'contact', 'fields': ['address', 'name'], 'no_marker': True}" />
+                    </div>
+                </div>
+
+                <!-- Invoice Details -->
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Invoice Date:</strong> <span t-field="o.invoice_date"/></p>
+                    <p><strong>Due Date:</strong> <span t-field="o.invoice_date_due"/></p>
+                </div>
+
+                <!-- Line Items -->
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                    <thead>
+                        <tr style="background: #3498db; color: white;">
+                            <th style="padding: 10px;">Description</th>
+                            <th style="padding: 10px; text-align: right;">Qty</th>
+                            <th style="padding: 10px; text-align: right;">Unit Price</th>
+                            <th style="padding: 10px; text-align: right;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="lines" t-as="line">
+                            <td style="padding: 10px;"><span t-field="line.name"/></td>
+                            <td style="padding: 10px; text-align: right;"><span t-field="line.quantity"/></td>
+                            <td style="padding: 10px; text-align: right;"><span t-field="line.price_unit"/></td>
+                            <td style="padding: 10px; text-align: right;"><span t-field="line.price_subtotal"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Totals -->
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <table style="width: 300px; float: right;">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td style="text-align: right;"><span t-field="o.amount_untaxed"/></td>
+                        </tr>
+                        <tr>
+                            <td>Tax</td>
+                            <td style="text-align: right;"><span t-field="o.amount_tax"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td style="text-align: right;"><span t-field="o.amount_total"/></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Footer -->
+                <div style="border-top: 1px solid #ccc; padding-top: 20px; font-size: 12px; color: #555;">
+                    <t t-if="o.narration">
+                        <p><strong>Notes:</strong></p>
+                        <p><span t-field="o.narration"/></p>
+                    </t>
+                    <p style="text-align: center; margin-top: 30px;">Thank you for your business!</p>
+
+                    <!-- Static Signature Image -->
+                    <div style="margin-top: 40px; text-align: right;">
+                        <img t-att-src="'/fleet_car_workshop/static/description/aston.jpg'" style="height: 90px;width:160px" />
+                        <p><strong>Authorized Signature</strong></p>
+                    </div>
+                </div>
+
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,43 @@
+.modern-invoice {
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  color: #333;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.modern-invoice .invoice-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modern-invoice .invoice-header .company-logo {
+  width: 40%;
+}
+
+.modern-invoice .invoice-header .company-logo img {
+  max-height: 80px;
+  max-width: 200px;
+}
+
+.modern-invoice .invoice-header .invoice-title {
+  text-align: right;
+}
+
+.modern-invoice .invoice-header .invoice-title h1 {
+  color: #3498db;
+  font-weight: 300;
+  margin: 0 0 5px 0;
+  font-size: 28px;
+}
+/*# sourceMappingURL=invoice.css.map */

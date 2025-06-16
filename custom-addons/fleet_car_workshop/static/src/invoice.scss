@@ -1,0 +1,39 @@
+// static/src/scss/invoice.scss
+.modern-invoice {
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+        
+        .company-logo {
+            width: 40%;
+            
+            img {
+                max-height: 80px;
+                max-width: 200px;
+            }
+        }
+        
+        .invoice-title {
+            text-align: right;
+            
+            h1 {
+                color: #3498db;
+                font-weight: 300;
+                margin: 0 0 5px 0;
+                font-size: 28px;
+            }
+        }
+    }
+    
+    // [Continue with other styles...]
+}

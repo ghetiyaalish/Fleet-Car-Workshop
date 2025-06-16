@@ -45,8 +45,14 @@
         'views/worksheet_tag_views.xml',
         'views/car_workshop_reports.xml',
         'views/car_accident_repair.xml',
+        'views/invoice_template.xml'
 
     ],
+    'assets': {
+    'web.assets_backend': [
+        'fleet_car_workshop/static/src/invoice.scss',
+    ]
+    },
     'images': ['static/description/banner.png'],
     'license': 'AGPL-3',
     'installable': True,
