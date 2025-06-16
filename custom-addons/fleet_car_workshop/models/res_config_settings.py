@@ -31,3 +31,4 @@ class ResConfigSettings(models.TransientModel):
                                          config_parameter='fleet_car_workshop.invoice_journal_type',
                                          help='Set a journal for workshop')
     # whatsapp_url = fields.Char(string="WhatsApp URL")
+    

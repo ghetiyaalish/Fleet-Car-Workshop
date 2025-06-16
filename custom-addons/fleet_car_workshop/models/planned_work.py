@@ -21,7 +21,6 @@
 ###############################################################################
 from odoo import api, fields, models
 
-
 class PlannedWork(models.Model):
     """Model for planned work in car workshop"""
     _name = 'planned.work'
@@ -51,3 +50,4 @@ class PlannedWork(models.Model):
     def _onchange_planned_work_id(self):
         """ Compute work cost based on planned work"""
         self.work_cost = self.planned_work_id.lst_price
+        

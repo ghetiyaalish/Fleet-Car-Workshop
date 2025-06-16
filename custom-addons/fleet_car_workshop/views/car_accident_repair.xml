@@ -8,7 +8,7 @@
             <form string="Car"> 
                 <header>
                     <button name="action_low_record" string="Low" class="btn btn-secondary" type="object" />
-                    <button name="action_normal_record" class="btn btn-primary" string="Medium" type="object" />
+                    <button name="action_normal_record" class="btn btn-primary" string="Normal" type="object" />
                     <button name="action_high_record" string="High" class="btn btn-info" type="object" />
                     <button name="action_veryhigh_record" string="Very High" class="btn btn-success" type="object" />
 
@@ -37,22 +37,96 @@
                             <div class="oe_clear"/>
                         </page>
                         <page name="accident cars">
-                           <tree string="WORK">
-                           </tree>
+                            <group string="WORK">
+                                <field name="car_mo_id" />
+                                <field name="license_plate" />
+                                <field name="accident_datetime" />
+                                <field name="accident_location" />
+                                <field name="car_condition" />
+                                <field name="insurance_involved" />
+                                <field name="damage_description" />
+                            </group>
                         </page>
                         <page name="insurance claim">
+                            <group string="Insurance Info">
+    
+                                    <field name="insurance_company" />
+                                    <field name="policy_no" />
+                                    <field name="claim_no" />
+                                    <field name="damage_cost" />
+                                    <field name="claim_amount" />
+                                    <field name="insurance_type" />
+                                    <field name="policy_expiry_date" />
+                            </group>
+                               
+
+                            
                         </page>
                     </notebook>
                 </sheet>
             </form>
         </field>
     </record>
+    <record id="car_kanban_view" model="ir.ui.view">
+        <field name="name">material.used.view.kanban</field>
+        <field name="model">material.used</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column" default_group_by="acc_stage_id" quick_create="true" group_create="true" records_draggable="1" >
+                <field name="acc_name" />
+                <field name="acc_user_id" />
+                <field name="acc_partner_id" />
+                <field name="acc_request_date" />
+                <field name="acc_priority" />
+                <field name="acc_stage_id" />
+                <field name="acc_tag_ids" options="{'color_field': 'color'}"/>
+                <progressbar field="acc_kanban_state"
+                             colors='{"normal": "success", "done": "danger", "blocked": "muted"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class=" oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <field name="acc_tag_ids"
+                                           options="{'color_field': 'color'}"/>
+                                </div>
+                                <div>
+                                    <field name="acc_name" />
+                                </div>  
+                                <div>
+                                    <strong>
+                                        <field name="acc_user_id"/>
+                                    </strong>
+                                </div>
+                                <div class="text-muted">
+                                    
+                                    <span t-attf-class="#{red || ''}">
+                                        <i>
+                                            <field name="acc_request_date" />
+                                        </i>
+                                    </span>
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="acc_priority" widget="priority"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <div class="pull-left">
+                                        <field name="acc_kanban_state"/>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
 
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
     <record id="action_car_workshop_accident" model="ir.actions.act_window">
         <field name="name">Car</field>
         <field name="res_model">material.used</field>
-        <field name="view_mode">form</field>
+        <field name="view_mode">kanban,form</field>
         <field name="help" type="html">
             <p>
                 Odoo's car workshop management allows you to manage the pipeline

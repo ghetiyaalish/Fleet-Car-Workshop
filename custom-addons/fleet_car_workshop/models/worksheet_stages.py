@@ -21,7 +21,6 @@
 ###############################################################################
 from odoo import fields, models
 
-
 class WorksheetStages(models.Model):
     """Model for work sheet stages """
     _name = 'worksheet.stages'
@@ -46,3 +45,4 @@ class WorksheetStages(models.Model):
     is_fold = fields.Boolean(string='Folded in Tasks Pipeline',
                           help='This stage is folded in the kanban view when '
                                'there are no records in that stage to display.')
+    
