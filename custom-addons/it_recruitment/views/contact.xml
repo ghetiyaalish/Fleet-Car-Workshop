@@ -1,0 +1,105 @@
+<odoo>
+    <record id="view_it_recruitment_inquiry_tree" model="ir.ui.view">
+        <field name="name">it.recruitment.inquiry.tree</field>
+        <field name="model">it.recruitment.inquiry</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="create_date" string="Date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_recruitment_inquiry_form" model="ir.ui.view">
+        <field name="name">it.recruitment.inquiry.form</field>
+        <field name="model">it.recruitment.inquiry</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="address"/>
+                        </group>
+                    </group>
+                    <field name="message" widget="html"/>
+                    <field name="map_url"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_it_recruitment_job" model="ir.actions.act_window">
+        <field name="name">Job Positions</field>
+        <field name="res_model">it.recruitment.job</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_it_recruitment_applicant" model="ir.actions.act_window">
+        <field name="name">Applicants</field>
+        <field name="res_model">it.recruitment.applicant</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_it_recruitment_company" model="ir.actions.act_window">
+        <field name="name">Company Information</field>
+        <field name="res_model">it.recruitment.company</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_it_recruitment_inquiry" model="ir.actions.act_window">
+        <field name="name">Contact Inquiries</field>
+        <field name="res_model">it.recruitment.inquiry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_it_recruitment_dashboard" model="ir.actions.act_window">
+        <field name="name">Recruitment Dashboard</field>
+        <field name="res_model">it.recruitment.stats</field>
+        <field name="view_mode">dashboard</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="view_it_recruitment_dashboard"/>
+    </record>
+
+    <!-- Menu Structure -->
+    <menuitem id="menu_it_recruitment_root" name="IT Recruitment" sequence="10"/>
+    
+    <menuitem id="menu_it_recruitment_dashboard" 
+              name="Dashboard" 
+              action="action_it_recruitment_dashboard" 
+              sequence="1"
+              parent="menu_it_recruitment_root"/>
+              
+    <menuitem id="menu_it_recruitment_jobs" 
+              name="Job Positions" 
+              action="action_it_recruitment_job" 
+              sequence="2"
+              parent="menu_it_recruitment_root"/>
+              
+    <menuitem id="menu_it_recruitment_applicants" 
+              name="Applicants" 
+              action="action_it_recruitment_applicant" 
+              sequence="3"
+              parent="menu_it_recruitment_root"/>
+              
+    <menuitem id="menu_it_recruitment_company" 
+              name="Company Info" 
+              action="action_it_recruitment_company" 
+              sequence="4"
+              parent="menu_it_recruitment_root"/>
+              
+    <menuitem id="menu_it_recruitment_inquiries" 
+              name="Contact Inquiries" 
+              action="action_it_recruitment_inquiry" 
+              sequence="5"
+              parent="menu_it_recruitment_root"/>
+</odoo>

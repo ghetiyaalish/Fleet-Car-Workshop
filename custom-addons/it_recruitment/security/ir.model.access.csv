@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_it_recruitment_job,it.recruitment.job,model_it_recruitment_job,base.group_user,1,1,1,0
+access_it_recruitment_applicant,it.recruitment.applicant,model_it_recruitment_applicant,base.group_user,1,1,1,0
+access_it_recruitment_stats,it.recruitment.stats,model_it_recruitment_stats,base.group_user,1,0,0,0
+access_it_recruitment_company,it.recruitment.company,model_it_recruitment_company,base.group_user,1,0,0,0
+access_it_recruitment_inquiry,it.recruitment.inquiry,model_it_recruitment_inquiry,base.group_user,1,1,1,1

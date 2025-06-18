@@ -5,7 +5,8 @@ class MaterialUsed(models.Model):
     """Model for material used in car workshop"""
     _name = 'material.used'
     _description = 'Material Used in Car Workshop'
-    
+    # company_logo = fields.Binary("Company Logo", attachment=True)
+    # signature_image = fields.Binary("Authorized Signature", attachment=True)
     
 
     insurance_company = fields.Many2one(

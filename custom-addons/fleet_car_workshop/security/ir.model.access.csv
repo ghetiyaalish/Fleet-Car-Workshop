@@ -11,3 +11,4 @@ access_worksheet_tag_all_manager,vehicle.details.tags.all.manager,fleet_car_work
 access_worksheet_stages_manager,worksheet.stages.manager,fleet_car_workshop.model_worksheet_stages,fleet_car_workshop.fleet_car_workshop_manager,1,1,1,1
 access_material_used_manager,material.used.manager,fleet_car_workshop.model_material_used,fleet_car_workshop.fleet_car_workshop_manager,1,1,1,1
 access_planned_work_manager,planned.work.manager,fleet_car_workshop.model_planned_work,fleet_car_workshop.fleet_car_workshop_manager,1,1,1,1
+access_customer_info,customer.info,model_customer_info,base.group_user,1,1,1,0

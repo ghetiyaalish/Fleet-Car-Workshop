@@ -1,0 +1,108 @@
+/* static/src/css/dashboard.css */
+.o_dashboard_container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.o_dashboard_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.o_dashboard_header h1 {
+    color: #4a4a4a;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.o_dashboard_buttons .btn-primary {
+    background-color: #714B67;
+    border-color: #714B67;
+    color: white;
+}
+
+.o_dashboard_buttons .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.o_dashboard_stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.o_dashboard_card {
+    border-radius: 8px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.o_dashboard_card:hover {
+    transform: translateY(-5px);
+}
+
+.o_dashboard_card .card-title {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.o_dashboard_card .card-text {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.o_dashboard_charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.o_dashboard_chart_container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chart-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #4a4a4a;
+}
+
+.o_dashboard_chart {
+    height: 300px;
+}
+
+.o_dashboard_table {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table-header {
+    margin-bottom: 15px;
+}
+
+.table-header h3 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #4a4a4a;
+}
+
+/* Color classes for cards */
+.bg-primary { background-color: #714B67; }
+.bg-info { background-color: #17a2b8; }
+.bg-danger { background-color: #dc3545; }
+.bg-warning { background-color: #ffc107; color: #212529; }
