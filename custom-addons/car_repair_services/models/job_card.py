@@ -259,7 +259,47 @@ class JobCard(models.Model):
                         'target': 'current',
                         'domain': '[]',
                 }
+    def _update_order_line_info(self, product_id, quantity, **kwargs):
+        """
+        Add or update product in job card line based on quantity.
+        :param int product_id: The product, as a `product.product` id.
+        :return: The created or updated line.
+        """
+        self.ensure_one()
+        product = self.env['product.product'].browse(product_id)
+        _logger.info(f"=====unit price 1===:{product.lst_price}")
+        # Get price and tax
+        unit_price = 100.00
+        _logger.info(f"=====unit price 2===:{unit_price}")
         
+        taxes = product.taxes_id
+
+        # Find existing line
+        pol = self.job_card_line.filtered(lambda line: line.product_id.id == product_id)
+
+        if pol:
+            if quantity != 0:
+                pol.update({
+                    'product_uom_qty': quantity,
+                    'price_unit': unit_price,
+                    'tax_id': [(6, 0, taxes.ids)],
+                })
+            else:
+                pol.unlink()
+                return None
+        elif quantity > 0:
+            pol = self.env['job.card.line'].create({
+                'job_card_id': self.id,
+                'product_id': product_id,
+                'product_uom_qty': quantity,
+                'price_unit': unit_price,
+                'tax_id': [(6, 0, taxes.ids)],
+            })
+
+        return pol
+
+
+    
     @api.depends('state')
     def _get_estimate_count(self):
         for rec in self:
@@ -294,7 +334,7 @@ class JobCard(models.Model):
         res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
             res[product.id] |= {
-                'price': product.standard_price,
+                'price': product.lst_price or 0.0,
             }
         return res
     
@@ -306,12 +346,23 @@ class JobCard(models.Model):
             grouped_lines[line.product_id] |= line
         return grouped_lines
     
-    def action_open_job_card_with_inspection_popup(self):
-        inspection_obj = self.env['job.card.inspection']
-        inspection_id = inspection_obj.search([('job_card_id', '=', self.id)], limit=1)
+    # def action_open_job_card_with_inspection_popup(self):
+    #     inspection_obj = self.env['job.card.inspection']
+    #     inspection_id = inspection_obj.search([('job_card_id', '=', self.id)], limit=1)
 
-        if not inspection_id:
-            inspection_id = inspection_obj.create({'job_card_id': self.id})
+    #     if not inspection_id:
+    #         inspection_id = inspection_obj.create({'job_card_id': self.id})
+    
+    def action_open_job_card_with_inspection_popup(self):
+        return {
+            'name': 'Job Card Inspection',
+            'type': 'ir.actions.act_window',
+            'res_model': 'job.card',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'create': False}
+        }
 
         return {
             'name': 'Job Card With Inspection',
@@ -541,7 +592,7 @@ class JobCardLine(models.Model):
     def _get_product_catalog_lines_data(self):
         catalog_info = {
             'quantity': self.product_uom_qty,
-            'price': self.product_id.standard_price,
+            'price': self.price_unit,
         }
         return catalog_info
 
@@ -593,3 +644,12 @@ class JobCardLineInspection(models.Model):
         string='Confirmed Value'
     )
     notes = fields.Text(string='Notes')
+    
+    
+    
+class ConfirmInspectionOption(models.Model):
+    _name = 'confirm.inspection.option'
+    _description = 'Confirm Inspection Option'
+
+    name = fields.Char(string='Option Name', required=True)
+    value_id = fields.Many2one('pre.inspection.value', string='Pre-Inspection Value', required=True, ondelete='cascade')

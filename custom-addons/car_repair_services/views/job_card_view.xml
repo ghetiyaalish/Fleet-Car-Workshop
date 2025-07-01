@@ -117,17 +117,14 @@
 <!--                                    <field name="job_card_id" invisible="1"/>-->
                                 </tree>
                             </field>
-                            <group name="note_group" col="6" class="mt-2 mt-md-0">
-                                <group name="note_group" col="6" class="mt-2 mt-md-0">
-                                <group colspan="4">
-                                    <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
+                            <group name="note_group" col="3" class="mt-2 mt-md-0">
+                                <group name="terms_group" col="1">
+                                    <field name="note" nolabel="1" placeholder="Terms and conditions..." class="o_inline_form"/>
                                 </group>
-                                <group class="oe_subtotal_footer" colspan="2" name="sale_total">
-                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
+                                <group name="sale_total" col="2" class="oe_subtotal_footer">
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
                                 </group>
                                 <div class="clearfix"/>
-                            </group>
-                                
                             </group>
                         </page>
                         <page string="Other Info" name="other_information">
