@@ -15,10 +15,15 @@ from odoo import api, models, fields, _
 from odoo.exceptions import UserError, ValidationError
 import logging
 from odoo.tools.misc import formatLang
-
+from collections import defaultdict
 _logger = logging.getLogger(__name__)
 
 
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from collections import defaultdict
+    
+    
 class JobCard(models.Model):
     _name = 'job.card'
     _description = 'Job Card'
@@ -26,177 +31,66 @@ class JobCard(models.Model):
     _order = 'job_card_date desc, id desc'
     
 
+    @api.depends('job_card_line.price_subtotal', 'job_card_line.price_tax', 'job_card_line.price_total')
     def _compute_amounts(self):
-        """Compute order totals (untaxed, tax, total)."""
+        """Compute the total amounts of the SO."""
         for order in self:
-            amount_untaxed = amount_tax = 0.0
-            for line in order.job_card_line:
-                if line.display_type:
-                    continue
-                    
-                # Calculate line amounts including labour charge
-                line_subtotal = line.price_subtotal
-                if line.labour_charge:
-                    try:
-                        line_subtotal += float(line.labour_charge)
-                    except (ValueError, TypeError):
-                        pass
-                
-                amount_untaxed += line_subtotal
-                amount_tax += line.price_tax
-            
-            order.update({
-                'amount_untaxed': amount_untaxed,
-                'amount_tax': amount_tax,
-                'amount_total': amount_untaxed + amount_tax,
-            })
+            order = order.with_company(order.company_id)
+            job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
 
-    @api.depends('tax_totals')
-    def _compute_tax_totals_json(self):
-        for order in self:
-            if not order.tax_totals:
-                # Provide a complete empty structure with all required fields
-                order.tax_totals_json = json.dumps({
-                    'amount_total': 0.0,
-                    'amount_untaxed': 0.0,
-                    'amount_tax': 0.0,
-                    'groups_by_subtotal': [],
-                    'subtotals': [],
-                    'subtotals_order': [],
-                })
-                continue
+            if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_results = order.env['account.tax']._compute_taxes([
+                    line._convert_to_tax_base_line_dict()
+                    for line in job_card_line
+                ])
+                totals = tax_results['totals']
+                amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
+                amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+            else:
+                amount_untaxed = sum(job_card_line.mapped('price_subtotal'))
+                amount_tax = sum(job_card_line.mapped('price_tax'))
 
-            tax_totals_dict = order.tax_totals
-
-            # Handle string-formatted dictionaries
-            if isinstance(tax_totals_dict, str):
-                try:
-                    tax_totals_dict = json.loads(tax_totals_dict)
-                except json.JSONDecodeError:
-                    try:
-                        tax_totals_dict = ast.literal_eval(tax_totals_dict)
-                    except Exception:
-                        # Provide complete empty structure on error
-                        order.tax_totals_json = json.dumps({
-                            'amount_total': 0.0,
-                            'amount_untaxed': 0.0,
-                            'amount_tax': 0.0,
-                            'groups_by_subtotal': [],
-                            'subtotals': [],
-                            'subtotals_order': [],
-                        })
-                        continue
-
-            safe_totals = tax_totals_dict.copy()
-            
-            # Ensure required numeric fields exist
-            for key in ['amount_total', 'amount_untaxed', 'amount_tax']:
-                safe_totals[key] = float(safe_totals.get(key, 0.0))
-                
-            # Ensure required list fields exist and are iterable
-            for key in ['groups_by_subtotal', 'subtotals', 'subtotals_order']:
-                if key not in safe_totals or not isinstance(safe_totals.get(key), (list, tuple)):
-                    safe_totals[key] = []
-
-            order.tax_totals_json = json.dumps(safe_totals)
-        
-
-    @api.depends('job_card_line.price_subtotal', 'job_card_line.tax_id', 'currency_id', 'company_id')
+            order.amount_untaxed = amount_untaxed
+            order.amount_tax = amount_tax
+            order.amount_total = order.amount_untaxed + order.amount_tax
+            _logger.info(f"====totals job card==={order.amount_total}")
+   
+    @api.depends_context('lang')
+    @api.depends('job_card_line.tax_id', 'job_card_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
+        
         for order in self:
-            if not order.job_card_line:
-                # Provide complete empty structure instead of False
-                order.tax_totals = {
-                    'amount_total': 0.0,
-                    'amount_untaxed': 0.0,
-                    'amount_tax': 0.0,
-                    'groups_by_subtotal': [],
-                    'subtotals': [],
-                    'subtotals_order': [],
-                }
-                continue
-                
-            currency = order.currency_id or order.company_id.currency_id
-            amount_untaxed = 0.0
-            tax_groups = {}
-            ungrouped_taxes = {
-                'name': 'Ungrouped Taxes',
-                'amount': 0.0,
-                'base': 0.0
-            }
+            order = order.with_company(order.company_id)
+            job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
+            order.tax_totals = order.env['account.tax']._prepare_tax_totals(
+                [x._convert_to_tax_base_line_dict() for x in job_card_line],
+                order.currency_id or order.company_id.currency_id,
+            )
+            _logger.info(f"=====tax total==={order.tax_totals}")
 
-            for line in order.job_card_line.filtered(lambda l: not l.display_type):
-                price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                try:
-                    labour_charge = float(line.labour_charge or 0.0)
-                except (ValueError, TypeError):
-                    labour_charge = 0.0
-
-                taxes = line.tax_id.compute_all(
-                    price_unit,
-                    currency,
-                    line.product_uom_qty,
-                    product=line.product_id,
-                    partner=order.partner_id,
-                )
-
-                subtotal = taxes['total_excluded'] + labour_charge
-                amount_untaxed += subtotal
-
-                for tax in taxes['taxes']:
-                    tax_name = tax.get('name') or 'Tax'
-                    tax_groups.setdefault(tax_name, {
-                        'amount': 0.0,
-                        'base': 0.0,
-                    })
-                    tax_groups[tax_name]['amount'] += tax['amount']
-                    tax_groups[tax_name]['base'] += subtotal
-
-            # Include ungrouped taxes if any
-            if ungrouped_taxes['amount']:
-                tax_groups[0] = ungrouped_taxes
-
-            amount_tax = sum(t['amount'] for t in tax_groups.values())
-            total = amount_untaxed + amount_tax
-
-            # Define default subtotals structure
-            default_subtotals = [
-                {
-                    'name': 'Untaxed Amount',
-                    'amount': amount_untaxed,
-                    'formatted_amount': formatLang(order.env, amount_untaxed, currency_obj=currency).replace('\xa0', ' '),
-                },
-                {
-                    'name': 'Taxes',
-                    'amount': amount_tax,
-                    'formatted_amount': formatLang(order.env, amount_tax, currency_obj=currency).replace('\xa0', ' '),
-                },
-            ]
-
-            order.tax_totals = {
-                'amount_untaxed': amount_untaxed,
-                'amount_tax': amount_tax,
-                'amount_total': total,
-                'formatted_amount_total': formatLang(order.env, total, currency_obj=currency).replace('\xa0', ' '),
-                'formatted_amount_untaxed': formatLang(order.env, amount_untaxed, currency_obj=currency).replace('\xa0', ' '),
-                'formatted_amount_tax': formatLang(order.env, amount_tax, currency_obj=currency).replace('\xa0', ' '),
-                'groups_by_subtotal': [{
-                    'name': tax_name,
-                    'amount': data['amount'],
-                    'base': data['base'],
-                    'formatted_amount': formatLang(order.env, data['amount'], currency_obj=currency).replace('\xa0', ' '),
-                    'formatted_base': formatLang(order.env, data['base'], currency_obj=currency).replace('\xa0', ' '),
-                } for tax_name, data in tax_groups.items()],
-                'subtotals': default_subtotals,
-                'subtotals_order': [sub['name'] for sub in default_subtotals],
-                'total_included': total,
-            }
             
     @api.model
     def _get_default_non_gst_company(self):
         ''' Get the default non gst company'''
         company = self.env['res.company'].search([('vat','=',False)], limit=1)
         return company.id or self.env.company.id
+
+    # def _get_product_catalog_order_data(self, products, **kwargs):
+    #     res = super()._get_product_catalog_order_data(products, **kwargs)
+    #     for product in products:
+    #         res[product.id] |= {
+    #             'price': product.standard_price,
+    #         }
+    #     return res
+    
+    # def _get_product_catalog_record_lines(self, product_ids):
+    #     grouped_lines = defaultdict(lambda: self.job_card_line.browse([]))
+    #     for line in self.job_card_line:
+    #         if line.product_id.id not in product_ids:
+    #             continue
+    #         grouped_lines[line.product_id] |= line
+    #     return grouped_lines
+
 
 
     active = fields.Boolean(default=True, string="Active")
@@ -239,7 +133,7 @@ class JobCard(models.Model):
     note = fields.Text()
 
     
-    # tax_totals = fields.Json(compute="_compute_tax_totals", readonly=True)
+    tax_totals = fields.Json(compute="_compute_tax_totals", readonly=True)
     # tax_totals_json = fields.Char(compute="_compute_tax_totals_json", readonly=True)
     # tax_totals = fields.Char(string="tax_totals",compute='_compute_tax_totals', exportable=False) 
     # formatted_amount_total = fields.Char(string="Total", compute='_compute_tax_totals', store=False)
@@ -365,7 +259,7 @@ class JobCard(models.Model):
                         'target': 'current',
                         'domain': '[]',
                 }
-
+        
     @api.depends('state')
     def _get_estimate_count(self):
         for rec in self:
@@ -396,12 +290,67 @@ class JobCard(models.Model):
                 preInspectionData.extend([preInspection.pre_inspection_id.name, preInspection.value_id.name])
         return [preInspectionData[x:x+4] for x in range(0, len(preInspectionData),4)]
 
+    def _get_product_catalog_order_data(self, products, **kwargs):
+        res = super()._get_product_catalog_order_data(products, **kwargs)
+        for product in products:
+            res[product.id] |= {
+                'price': product.standard_price,
+            }
+        return res
+    
+    def _get_product_catalog_record_lines(self, product_ids):
+        grouped_lines = defaultdict(lambda: self.env['job.card.line'])
+        for line in self.job_card_line:
+            if line.product_id.id not in product_ids:
+                continue
+            grouped_lines[line.product_id] |= line
+        return grouped_lines
+    
+    def action_open_job_card_with_inspection_popup(self):
+        inspection_obj = self.env['job.card.inspection']
+        inspection_id = inspection_obj.search([('job_card_id', '=', self.id)], limit=1)
 
+        if not inspection_id:
+            inspection_id = inspection_obj.create({'job_card_id': self.id})
+
+        return {
+            'name': 'Job Card With Inspection',
+            'type': 'ir.actions.act_window',
+            'res_model': 'job.card.inspection',
+            'res_id': inspection_id.id,
+            'view_mode': 'form',
+            'target': 'new', # 'new' opens it as a popup/modal
+        }
+
+    
 class JobCardLine(models.Model):
     _name = 'job.card.line'
     _description = 'Job Card Line'
     _order = 'sequence, id'
 
+    def _convert_to_tax_base_line_dict(self, **kwargs):
+        """ Convert the current record to a dictionary in order to use the generic taxes computation method
+        defined on account.tax.
+
+        :return: A python dictionary.
+        """
+        # rrr = **kwargs
+        _logger.info(f"====helloooo")
+        self.ensure_one()
+        return self.env['account.tax']._convert_to_tax_base_line_dict(
+            self,
+            partner=self.job_card_id.partner_id,
+            currency=self.job_card_id.currency_id,
+            product=self.product_id,
+            taxes=self.tax_id,
+            price_unit=self.price_unit,
+            quantity=self.product_uom_qty,
+            discount=self.discount,
+            price_subtotal=self.price_subtotal,
+            **kwargs,
+        )
+    
+    
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id', 'labour_charge')
     def _compute_amount(self):
         """
@@ -440,53 +389,7 @@ class JobCardLine(models.Model):
                     'product_ids': self.env['product.product'].search(domain + [('model_ids', 'in', line.model_id.id)]).ids
                 })
 
-    def action_add_from_catalog(self):
-        # If called from job.card.line, map to its parent job_card_id
-        job_card = self.env['job.card'].browse(self.env.context.get('order_id'))
-        # _logger.info(f'----------------------JOB CARD--------------{job_card.currency_id}')
-        return job_card.action_add_from_catalog()
-
-
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Product',
-    #         'res_model': 'product.product',
-    #         'view_mode': 'kanban',
-    #         'target': 'current',
-    #         'context': {
-    #             'default_job_card_id': job_card.id,
-    #             'default_currency_id': job_card.currency_id.id,
-    #             'default_partner_id': job_card.partner_id.id,
-                
-    #         },
-    #         'domain': [('sale_ok', '=', True)],
-    #     }
     
-    # def action_add_from_catalog(self):
-    #     job_card = self.job_card_id if self._name == 'job.card.line' else self
-    #     _logger.info(f'--JOB CARD--{job_card}')
-    #     job_card.ensure_one()
-
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': 'Product Catalog',
-    #         'res_model': 'product.product',
-    #         'view_mode': 'tree,kanban,form',
-    #         'views': [
-    #             (False, 'tree'),  # Left-side category tree
-    #             (False, 'kanban'),  # Right-side product grid
-    #             (False, 'form')
-    #         ],
-    #         'target': 'current',
-    #         'context': {
-    #             'default_job_card_id': job_card.id,
-    #             'default_currency_id': job_card.currency_id.id,
-    #             'default_partner_id': job_card.partner_id.id,
-    #             'search_default_filter_sale_ok': True,
-    #             'catalog_view': True,  # Flag to enable custom JS
-    #         },
-    #         'domain': [('sale_ok', '=', True)],
-    #     }
     
     state=fields.Selection(
         related='job_card_id.state',
@@ -519,7 +422,59 @@ class JobCardLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     labour_charge = fields.Float(string="Labour Charge",default=0.0)
+    job_card_inspection_line_ids = fields.One2many(
+        'job.card.line.inspection',
+        'job_card_line_id',
+        string='Pre-Inspection Items',
+    )
+    
+    @api.model
+    def create(self, vals):
+        line = super().create(vals)
+        line._create_inspection_lines()
+        return line
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'product_id' in vals:
+            for line in self:
+                line.job_card_inspection_line_ids.unlink()
+                line._create_inspection_lines()
+        return res
+
+    def _create_inspection_lines(self):
+        ConfirmOption = self.env['confirm.inspection.option']
+        if self.product_id and self.product_id.pre_inspection_line:
+            for item in self.product_id.pre_inspection_line:
+                # Extract and split the value options from value_id.name
+                value_options = [opt.strip().lower() for opt in item.value_id.name.split('/') if opt.strip()]
+                # confirm_option_id = []
+                _logger.info(f"====value_options=====:{value_options}")
+                _logger.info(f"====item.value=====:{item.value_id.id}")
+                confirm_option_ids = []
+                for option in value_options:
+                    confirm_option = ConfirmOption.search([('name', '=', option)], limit=1)
+                    _logger.info(f"====confirm_option=====:{confirm_option}")
+                    _logger.info(f"====item.value=====:{item.value_id.id}")
+                    if not confirm_option:
+                        confirm_option = ConfirmOption.create({
+                            'name': option,
+                            'value_id': item.value_id.id,
+                        })
+                    confirm_option_ids.append(confirm_option.id)
+                    _logger.info(f"====confirm_option if=====:{confirm_option}")
+
+                # confirm_option_id = confirm_option_ids[0] if confirm_option_ids else False
+                # Create the job.card.line.inspection line
+                self.env['job.card.line.inspection'].create({
+                    'job_card_line_id': self.id,
+                    'pre_inspection_id': item.pre_inspection_id.id,
+                    'value_id': item.value_id.id,
+                    # 'confirm_inspection': confirm_option_ids,
+                #    'confirm_inspection': [(6, 0, confirm_option_ids)],
+                })
+    
+    
     @api.depends('job_card_id.currency_id')
     def _compute_currency_id(self):
         for rec in self:
@@ -576,11 +531,20 @@ class JobCardLine(models.Model):
                 **kwargs,
             },
         )
+        
+        
+    def action_add_from_catalog(self):
+        job_card = self.env['job.card'].browse(
+            self.env.context.get('order_id'))
+        return job_card.action_add_from_catalog()
 
-    # def action_add_from_catalog(self):
-    #     jobCard = self.env['job.card'].browse(self.env.context.get('job_card_id'))
-    #     _logger.info(f"=====jobcard===:{jobCard}")
-    #     return jobCard.action_add_from_catalog()
+    def _get_product_catalog_lines_data(self):
+        catalog_info = {
+            'quantity': self.product_uom_qty,
+            'price': self.product_id.standard_price,
+        }
+        return catalog_info
+
     
     
     
@@ -602,20 +566,30 @@ class JobCardImage(models.Model):
     photo_1920 = fields.Image("Photos", copy=False, attachment=True, max_width=1024, max_height=1024)
     job_card_id = fields.Many2one('job.card', string='Job Card')
     
-    
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
+class JobCardLineInspection(models.Model):
+    _name = 'job.card.line.inspection'
+    _description = 'Job Card Line Inspection'
+    _order = 'sequence, id'
 
-    # def action_add_to_job_card(self):
-    #     job_card_id = self.env.context.get('default_job_card_id')
-    #     if job_card_id:
-    #         job_card = self.env['job.card'].browse(job_card_id)
-    #         job_card.job_card_line.create({
-    #             'job_card_id': job_card.id,
-    #             'product_id': self.id,
-    #             'name': self.name,
-    #             'product_uom_qty': 1,
-    #             'product_uom': self.uom_id.id,
-    #             'price_unit': self.list_price,
-    #             'tax_id': [(6, 0, self.taxes_id.ids)],
-    #         })
+    sequence = fields.Integer(string='Sequence', default=10)
+    job_card_line_id = fields.Many2one(
+        'job.card.line', 
+        string='Job Card Line',
+        required=True,
+        ondelete='cascade'
+    )
+    pre_inspection_id = fields.Many2one(
+        'pre.inspection',
+        string='Pre-Inspection Item',
+        required=True
+    )
+    value_id = fields.Many2one(
+        'pre.inspection.value',
+        string='Expected Value',
+        required=True
+    )
+    confirm_inspection = fields.Many2many(
+        'confirm.inspection.option',
+        string='Confirmed Value'
+    )
+    notes = fields.Text(string='Notes')

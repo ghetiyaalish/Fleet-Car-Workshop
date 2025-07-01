@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="job_card_tree_view" model="ir.ui.view">
-        <field name="name">job.card.tree</field>
+        <field name="name">job.car.tree</field>
         <field name="model">job.card</field>
         <field name="arch" type="xml">
             <tree string="Model variant" sample="1" multi_edit="1">
@@ -26,7 +26,6 @@
         <field name="arch" type="xml">
             <form string="Job Card Order">
                 <header>
-                    <!-- invisible=state not in ['draft']" -->
                     <!-- <button name="action_confirm" data-hotkey="v" string="Confirm" type="object"/> -->
                     <button name="action_draft" invisible="state not in ['cancel']" type="object" string="Set to Draft" data-hotkey="y"/>
                     <button name="action_assign" invisible="state not in ['draft']" type="object" string="Assign" data-hotkey="n"/>
@@ -35,6 +34,10 @@
                     <button name="action_working" invisible="state not in ['approve']" type="object" string="Working" data-hotkey="w"/>
                     <button name="action_done" invisible="state not in ['work']" type="object" string="Done" data-hotkey="d"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="z"/>
+                    <button name="action_open_job_card_with_inspection_popup"
+                        string="Job Card With Inspection"
+                        type="object"
+                        class="oe_highlight"  />
                     <field name="state" widget="statusbar" statusbar_visible="draft,assign,estimate,approve,work,done"/>
                 </header>
                 <sheet>
@@ -81,32 +84,33 @@
                         <page string="Items" name="order_lines">
                             <field name="job_card_line" widget="section_and_note_one2many" mode="tree" readonly="state in ['done','cancel']">
                                 <tree string="Job Card Lines" editable="bottom">
-                                     <control>
+                                    <control>
                                         <create name="add_product_control" string="Add a product"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                         <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-                                        <!-- <button name="action_add_from_catalog" string="Catalog" type="object" class="btn_no_border btn btn-link" context="{'job_card_id':parent.id}" /> -->
-                                        <button name="action_add_from_catalog" type="object" string="Catalog" class="px-4 btn-link" context="{'order_id': parent.id}"/>
+                                        <button name="action_add_from_catalog" type="object"
+                                            string="Catalog" class="px-4 btn-link"
+                                            context="{'order_id': parent.id}"/>
                                     </control>
-                                    <field name="display_type" invisible="1"/>
+                                    <field name="display_type" invisible="1" optional="hide"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="categ_id" options="{'no_create': True}"/>
 <!--                                    <field name="model_id" invisible="1"/>-->
 <!--                                    <field name="product_ids" widget="many2many_tags" invisible="1"/>-->
-                                    <field name="product_id" required="not display_type" force_save="1" />
+                                    <field name="product_id" required="display_type == False" force_save="1" />
 <!--                                    <field name="product_id" required="display_type == False" options="{'no_create': True}" force_save="1" />-->
 <!--                                    <field name="product_id" required="display_type == False" force_save="1" domain="[('id', 'in', product_ids)]"/>-->
                                     <field name="name" optional="show"/>
                                     <field name="product_uom_qty"/>
-                                   <field name="product_uom_category_id" invisible="1"/>
-                                    <!-- <field name="product_uom" force_save="1" string="UoM" required="display_type == False" options="{'no_open': True, 'no_create': True}" optional="hide"/> -->
+                                    <field name="product_uom_category_id" invisible="1" optional="hide"/>
+                                    <field name="product_uom" force_save="1" string="UoM" required="display_type == False" options="{'no_open': True, 'no_create': True}" optional="hide"/>
                                     <field name="price_unit"/>
                                     <field name="labour_charge" required="1"/>
                                     <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale')]" optional="show"/>
-                                    <!-- <field name="discount" string="Disc.%" optional="show"/> -->
-                                   <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show" widget="product_discount"/>
+                                    <field name="discount" string="Disc.%" optional="show"/>
+<!--                                    <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show" widget="product_discount"/>-->
 <!--                                    <field name="price_subtotal" widget="monetary" />-->
-                                    <!-- <field name="price_total" widget="monetary" /> -->
+                                    <field name="price_total" widget="monetary" />
 <!--                                        <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>-->
 <!--                                         <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>-->
 <!--                                    <field name="price_tax" invisible="1"/>-->
@@ -114,22 +118,18 @@
                                 </tree>
                             </field>
                             <group name="note_group" col="6" class="mt-2 mt-md-0">
-                                <group class="oe_subtotal_footer d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
-                                    <!-- <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" readonly="1"/> -->
-                                    <!-- <field name="tax_totals" string="Total Amount" widget="account_tax_totals" options="{'currency_field': 'currency_id'}" nolabel="1" readonly="1"/>       -->
-                                    <!-- <field name="tax_totals_json" widget="account-tax-totals-field"
-                                        options="{'currency_field': 'currency_id'}"
-                                        readonly="1" nolabel="1"/> -->
-                                </group> 
-                                
-
-                                <group colspan="4" class="order-1 order-lg-0">
+                                <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <group colspan="4">
                                     <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                                 </group>
+                                <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
+                                </group>
+                                <div class="clearfix"/>
+                            </group>
                                 
                             </group>
                         </page>
-
                         <page string="Other Info" name="other_information">
                             <group>
                                 <group>
@@ -146,7 +146,6 @@
                                 <tree string="Job Card Image Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="photo_type" required="1"/>
-                                    <!-- <field name="photo_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_1024'}" required="1"/> -->
                                     <field name="photo_1920" widget="image" required="1"/>
                                     <field name="name"/>
                                 </tree>
@@ -155,6 +154,11 @@
                     </notebook>
                     <chatter/>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
