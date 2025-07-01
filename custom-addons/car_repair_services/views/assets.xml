@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <!-- JavaScript -->
+            <script src="/car_repair_services/static/src/js/product_catalog.js"/>
+            
+            <!-- SCSS -->
+            <link rel="stylesheet" href="/car_repair_services/static/src/scss/product_catalog.scss"/>
+        </xpath>
+    </template>
+</odoo>

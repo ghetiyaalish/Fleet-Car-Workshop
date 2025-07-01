@@ -2,6 +2,7 @@ from odoo import api, fields, models
 class Customer(models.Model):
     _name="customer.info"
     _description="Multibrand Car Workshop,biggest workshop of Rajkot"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     
     cust_name = fields.Char(string="Customer Name",required=True,help="customer info") 
     contact_details = fields.Char(string="Contact Details",required=True)

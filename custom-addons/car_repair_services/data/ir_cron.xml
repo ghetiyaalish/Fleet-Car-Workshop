@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_auto_send_insurance_expiry" model="ir.cron">
+        <field name="name">Customer Insurance: Expiry Whatsapp Notification</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+<!--        <field name="numbercall">-1</field>-->
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 04:30:00')" />
+<!--        <field name="doall" eval="False"/>-->
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="code">model._autosend_insurance_expiry_whatsapp_notification()</field>
+        <field name="state">code</field>
+
+
+    </record>
+</odoo>

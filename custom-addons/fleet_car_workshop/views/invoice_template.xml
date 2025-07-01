@@ -3,7 +3,7 @@
     <template id="custom_invoice_report" inherit_id="l10n_in.l10n_in_report_invoice_document_inherit">
         <xpath expr="//div[contains(@class, 'page')]" position="replace">
             <div class="modern-invoice" style="font-family: 'Segoe UI', sans-serif; max-width: 900px; margin: auto;">
-
+                
                 <!-- Header -->
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ccc;">
                     <div>

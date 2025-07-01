@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Activiy view inherit -->
+    <record id="res_partner_view_activity_inherit" model="ir.ui.view">
+        <field name="name">res.partner.activity</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="mail.res_partner_view_activity" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mobile" display="full"/>
+                <field name="model_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

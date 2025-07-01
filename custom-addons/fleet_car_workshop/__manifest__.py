@@ -31,7 +31,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer ': 'Cybrosys Techno Solutions',
     'website': "https://www.cybrosys.com",
-    'depends': ['fleet', 'stock', 'account'],
+    'depends': ['base','mail','fleet', 'stock', 'account'],
     'data': [
         'security/fleet_vehicle_security.xml',
         'security/ir.model.access.csv',

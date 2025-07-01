@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+<!--            <xpath expr="//div[@name='pricing']" position="after">-->
+                <field name="labour_charge"/>
+            </xpath>
+            <xpath expr="//group[@name='group_standard_price']" position="inside">
+                <field name="model_ids" widget="many2many_tags" />
+                <field name="product_location_id" />
+<!--                <field name="product_location_id" required="detailed_type == 'product'" />-->
+                <field name="print_name" />
+            </xpath>
+<!--            <xpath expr="//notebook" position="before">-->
+<!--                <group>-->
+<!--                    <group>-->
+<!--                        <field name="print_name" />-->
+<!--                    </group>-->
+<!--                    <group></group>-->
+<!--                </group>-->
+<!--            </xpath>-->
+            <xpath expr="//notebook" position="inside">
+                <page string="Pre Inspection">
+                    <field name="pre_inspection_line" widget="section_and_note_one2many" mode="tree">
+                        <tree string="Pre Inspection" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="pre_inspection_id" required="1"/>
+                            <field name="value_id" required="1"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Post Inspection">
+                    <field name="post_inspection_line" widget="section_and_note_one2many" mode="tree">
+                        <tree string="Post Inspection" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="post_inspection_id" required="1"/>
+                            <field name="value_id" required="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    
+    <record id="product_location_tree_view" model="ir.ui.view">
+        <field name="name">product.location.tree</field>
+        <field name="model">product.location</field>
+        <field name="arch" type="xml">
+            <tree string="Product Location" editable="top">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_product_location" model="ir.actions.act_window">
+        <field name="name">Product Location</field>
+        <field name="res_model">product.location</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_product_location" action="action_product_location" name="Product Location" sequence="5" parent="sale.product_menu_catalog" />
+
+    <record id="pre_inspection_tree_view" model="ir.ui.view">
+        <field name="name">pre.inspection.tree</field>
+        <field name="model">pre.inspection</field>
+        <field name="arch" type="xml">
+            <tree string="Pre inspection" editable="top">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_pre_inspection" model="ir.actions.act_window">
+        <field name="name">Pre Inspection</field>
+        <field name="res_model">pre.inspection</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_pre_inspection" action="action_pre_inspection" name="Pre Inspection" sequence="6" parent="sale.product_menu_catalog" />
+    <record id="post_inspection_tree_view" model="ir.ui.view">
+        <field name="name">Post.inspection.tree</field>
+        <field name="model">post.inspection</field>
+        <field name="arch" type="xml">
+            <tree string="Pre inspection" editable="top">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_post_inspection" model="ir.actions.act_window">
+        <field name="name">Post Inspection</field>
+        <field name="res_model">post.inspection</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_post_inspection" action="action_post_inspection" name="Post Inspection" sequence="7" parent="sale.product_menu_catalog" />
+    <record id="inspection_value_tree_view" model="ir.ui.view">
+        <field name="name">Post.inspection.tree</field>
+        <field name="model">inspection.value</field>
+        <field name="arch" type="xml">
+            <tree string="Pre inspection" editable="top">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="action_inspection_value" model="ir.actions.act_window">
+        <field name="name">Inspection Value</field>
+        <field name="res_model">inspection.value</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_inspection_value" action="action_inspection_value" name="Inspection Value" sequence="8" parent="sale.product_menu_catalog" />
+</odoo>

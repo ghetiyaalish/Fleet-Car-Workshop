@@ -5,18 +5,49 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="cust_name"/>
+                <field name="contact_details" />
+                <field name="cust_type" />
+                <field name="insurance_policy_no" />
+                <field name="vehicle_state" />
             </tree>
+        </field>
+    </record>
+    <record id="car_workshop_customer_form" model="ir.ui.view">
+        <field name="name">customer.info.form</field>
+        <field name="model">customer.info</field>
+        <field name="arch" type="xml">
+            <form string="Customer">
+                <sheet>
+                    <group>
+                        <field name="cust_name"/>
+                        <field name="contact_details" />
+                        <field name="cust_type" />
+                        <field name="insurance_policy_no" />
+                        <field name="vehicle_state" />
+                    </group>
+                    <notebook>
+                        <page string="Personal Details" name="personal_details">
+                            <tree string="Info" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
         </field>
     </record>
     <record id="action_customer_workshop" model="ir.actions.act_window">
         <field name="name">Customer</field>
         <field name="res_model">customer.info</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p>
                 MULTIBRAND CAR WORKSHOP RAJKOT , ONE STOP SOLUTION FOR EVERY PROBLEM
             </p>
-        </field>
+        </field>    
     </record>
     <menuitem name="Customer" id="customer_workshop"
               parent="menu_fleet_car_workshop_root" sequence="6"/>

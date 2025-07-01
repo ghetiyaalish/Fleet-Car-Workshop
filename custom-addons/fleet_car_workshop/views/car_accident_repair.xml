@@ -11,7 +11,6 @@
                     <button name="action_normal_record" class="btn btn-primary" string="Normal" type="object" />
                     <button name="action_high_record" string="High" class="btn btn-info" type="object" />
                     <button name="action_veryhigh_record" string="Very High" class="btn btn-success" type="object" />
-
                     <field  name="acc_priority" widget="statusbar" options="{'clickable': '1'}" />
                 </header> 
                 <sheet string="Car Workshop">

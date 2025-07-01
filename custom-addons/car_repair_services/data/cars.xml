@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="brand_abarth" model="car.make">
+        <field name="name">Abarth</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_abarth-image.png" />
+    </record>
+    <record id="brand_mahindra" model="car.make">
+        <field name="name">Mahindra</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_mahindra-image.png" />
+    </record>
+    <record id="brand_acura" model="car.make">
+        <field name="name">Acura</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_acura-image.png" />
+    </record>
+    <record id="brand_alfa" model="car.make">
+        <field name="name">Alfa</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_alfa-image.png" />
+    </record>
+    <record id="brand_audi" model="car.make">
+        <field name="name">Audi</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_audi-image.png" />
+    </record>
+    <record id="brand_austin" model="car.make">
+        <field name="name">Austin</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_austin-image.png" />
+    </record>
+    <record id="brand_bentley" model="car.make">
+        <field name="name">Bentley</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_bentley-image.png" />
+    </record>
+    <record id="brand_bmw" model="car.make">
+        <field name="name">Bmw</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_bmw-image.png" />
+    </record>
+    <record id="brand_bugatti" model="car.make">
+        <field name="name">Bugatti</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_bugatti-image.png" />
+    </record>
+    <record id="brand_buick" model="car.make">
+        <field name="name">Buick</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_buick-image.png" />
+    </record>
+    <record id="brand_byd" model="car.make">
+        <field name="name">Byd</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_byd-image.png" />
+    </record>
+    <record id="brand_cadillac" model="car.make">
+        <field name="name">Cadillac</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_cadillac-image.png" />
+    </record>
+    <record id="brand_chevrolet" model="car.make">
+        <field name="name">Chevrolet</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_chevrolet-image.png" />
+    </record>
+    <record id="brand_chrysler" model="car.make">
+        <field name="name">Chrysler</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_chrysler-image.png" />
+    </record>
+    <record id="brand_citroen" model="car.make">
+        <field name="name">Citroen</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_citroen-image.png" />
+    </record>
+    <record id="brand_corre_la_licorne" model="car.make">
+        <field name="name">Corre La Licorne</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_corre-la-licorne-image.png" />
+    </record>
+    <record id="brand_daewoo" model="car.make">
+        <field name="name">Daewoo</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_daewoo-image.png" />
+    </record>
+    <record id="brand_dodge" model="car.make">
+        <field name="name">Dodge</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_dodge-image.png" />
+    </record>
+    <record id="brand_ferrari" model="car.make">
+        <field name="name">Ferrari</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_ferrari-image.png" />
+    </record>
+    <record id="brand_fiat" model="car.make">
+        <field name="name">Fiat</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_fiat-image.png" />
+    </record>
+    <record id="brand_ford" model="car.make">
+        <field name="name">Ford</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_ford-image.png" />
+    </record>
+    <record id="brand_holden" model="car.make">
+        <field name="name">Holden</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_holden-image.png" />
+    </record>
+    <record id="brand_honda" model="car.make">
+        <field name="name">Honda</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_honda-image.png" />
+    </record>
+    <record id="brand_hyundai" model="car.make">
+        <field name="name">Hyundai</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_hyundai-image.png" />
+    </record>
+    <record id="brand_infiniti" model="car.make">
+        <field name="name">Infiniti</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_infiniti-image.png" />
+    </record>
+    <record id="brand_isuzu" model="car.make">
+        <field name="name">Isuzu</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_isuzu-image.png" />
+    </record>
+    <record id="brand_jaguar" model="car.make">
+        <field name="name">Jaguar</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_jaguar-image.png" />
+    </record>
+    <record id="brand_jeep" model="car.make">
+        <field name="name">Jeep</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_jeep-image.png" />
+    </record>
+    <record id="brand_kia" model="car.make">
+        <field name="name">Kia</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_kia-image.png" />
+    </record>
+    <record id="brand_koenigsegg" model="car.make">
+        <field name="name">Koenigsegg</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_koenigsegg-image.png" />
+    </record>
+    <record id="brand_lagonda" model="car.make">
+        <field name="name">Lagonda</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_lagonda-image.png" />
+    </record>
+    <record id="brand_lamborghini" model="car.make">
+        <field name="name">Lamborghini</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_lamborghini-image.png" />
+    </record>
+    <record id="brand_lancia" model="car.make">
+        <field name="name">Lancia</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_lancia-image.png" />
+    </record>
+    <record id="brand_land_rover" model="car.make">
+        <field name="name">Land Rover</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_land-rover-image.png" />
+    </record>
+    <record id="brand_lexus" model="car.make">
+        <field name="name">Lexus</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_lexus-image.png" />
+    </record>
+    <record id="brand_lincoln" model="car.make">
+        <field name="name">Lincoln</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_lincoln-image.png" />
+    </record>
+    <record id="brand_lotus" model="car.make">
+        <field name="name">Lotus</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_lotus-image.png" />
+    </record>
+    <record id="brand_maserati" model="car.make">
+        <field name="name">Maserati</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_maserati-image.png" />
+    </record>
+    <record id="brand_maybach" model="car.make">
+        <field name="name">Maybach</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_maybach-image.png" />
+    </record>
+    <record id="brand_mazda" model="car.make">
+        <field name="name">Mazda</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_mazda-image.png" />
+    </record>
+    <record id="brand_mercedes" model="car.make">
+        <field name="name">Mercedes</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_mercedes-image.png" />
+    </record>
+    <record id="brand_mg" model="car.make">
+        <field name="name">Mg</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_mg-image.png" />
+    </record>
+    <record id="brand_mini" model="car.make">
+        <field name="name">Mini</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_mini-image.png" />
+    </record>
+    <record id="brand_mitsubishi" model="car.make">
+        <field name="name">Mitsubishi</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_mitsubishi-image.png" />
+    </record>
+    <record id="brand_morgan" model="car.make">
+        <field name="name">Morgan</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_morgan-image.png" />
+    </record>
+    <record id="brand_nissan" model="car.make">
+        <field name="name">Nissan</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_nissan-image.png" />
+    </record>
+    <record id="brand_oldsmobile" model="car.make">
+        <field name="name">Oldsmobile</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_oldsmobile-image.png" />
+    </record>
+    <record id="brand_opel" model="car.make">
+        <field name="name">Opel</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_opel-image.png" />
+    </record>
+    <record id="brand_peugeot" model="car.make">
+        <field name="name">Peugeot</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_peugeot-image.png" />
+    </record>
+    <record id="brand_pontiac" model="car.make">
+        <field name="name">Pontiac</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_pontiac-image.png" />
+    </record>
+    <record id="brand_porsche" model="car.make">
+        <field name="name">Porsche</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_porsche-image.png" />
+    </record>
+    <record id="brand_rambler" model="car.make">
+        <field name="name">Rambler</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_rambler-image.png" />
+    </record>
+    <record id="brand_renault" model="car.make">
+        <field name="name">Renault</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_renault-image.png" />
+    </record>
+    <record id="brand_rolls-royce" model="car.make">
+        <field name="name">Rolls-Royce</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_rolls-royce-image.png" />
+    </record>
+    <record id="brand_saab" model="car.make">
+        <field name="name">Saab</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_saab-image.png" />
+    </record>
+    <record id="brand_scion" model="car.make">
+        <field name="name">Scion</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_scion-image.png" />
+    </record>
+    <record id="brand_skoda" model="car.make">
+        <field name="name">Skoda</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_skoda-image.png" />
+    </record>
+    <record id="brand_smart" model="car.make">
+        <field name="name">Smart</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_smart-image.png" />
+    </record>
+    <record id="brand_steyr" model="car.make">
+        <field name="name">Steyr</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_steyr-image.png" />
+    </record>
+    <record id="brand_subaru" model="car.make">
+        <field name="name">Subaru</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_subaru-image.png" />
+    </record>
+    <record id="brand_tesla_motors" model="car.make">
+        <field name="name">Tesla Motors</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_tesla-motors-image.png" />
+    </record>
+    <record id="brand_toyota" model="car.make">
+        <field name="name">Toyota</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_toyota-image.png" />
+    </record>
+    <record id="brand_trabant" model="car.make">
+        <field name="name">Trabant</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_trabant-image.png" />
+    </record>
+    <record id="brand_volkswagen" model="car.make">
+        <field name="name">Volkswagen</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_volkswagen-image.png" />
+    </record>
+    <record id="brand_volvo" model="car.make">
+        <field name="name">Volvo</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_volvo-image.png" />
+    </record>
+    <record id="brand_willys" model="car.make">
+        <field name="name">Willys</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_willys-image.png" />
+    </record>
+    <record id="brand_suzuki" model="car.make">
+        <field name="name">Suzuki</field>
+        <field name="image_128" type="base64" file="car_repair_services/static/img/brand_suzuki-image.png" />
+    </record>
+    <!-- <record id="model_corsa" model="fleet.vehicle.model">
+        <field name="name">Corsa</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_astra" model="fleet.vehicle.model">
+        <field name="name">Astra</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_agila" model="fleet.vehicle.model">
+        <field name="name">Agila</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_combotour" model="fleet.vehicle.model">
+        <field name="name">Combo Tour</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_meriva" model="fleet.vehicle.model">
+        <field name="name">Meriva</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_astragtc" model="fleet.vehicle.model">
+        <field name="name">AstraGTC</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_zafira" model="fleet.vehicle.model">
+        <field name="name">Zafira</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_zafiratourer" model="fleet.vehicle.model">
+        <field name="name">Zafira Tourer</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_insignia" model="fleet.vehicle.model">
+        <field name="name">Insignia</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_mokka" model="fleet.vehicle.model">
+        <field name="name">Mokka</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_antara" model="fleet.vehicle.model">
+        <field name="name">Antara</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_ampera" model="fleet.vehicle.model">
+        <field name="name">Ampera</field>
+        <field name="brand_id" ref="brand_opel" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_a1" model="fleet.vehicle.model">
+        <field name="name">A1</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_a3" model="fleet.vehicle.model">
+        <field name="name">A3</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_a4" model="fleet.vehicle.model">
+        <field name="name">A4</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_a5" model="fleet.vehicle.model">
+        <field name="name">A5</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_a6" model="fleet.vehicle.model">
+        <field name="name">A6</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_a7" model="fleet.vehicle.model">
+        <field name="name">A7</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_a8" model="fleet.vehicle.model">
+        <field name="name">A8</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_q3" model="fleet.vehicle.model">
+        <field name="name">Q3</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_q5" model="fleet.vehicle.model">
+        <field name="name">Q5</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_q7" model="fleet.vehicle.model">
+        <field name="name">Q7</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_tt" model="fleet.vehicle.model">
+        <field name="name">TT</field>
+        <field name="brand_id" ref="brand_audi" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_serie1" model="fleet.vehicle.model">
+        <field name="name">Serie 1</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_serie3" model="fleet.vehicle.model">
+        <field name="name">Serie 3</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_serie5" model="fleet.vehicle.model">
+        <field name="name">Serie 5</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_serie6" model="fleet.vehicle.model">
+        <field name="name">Serie 6</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_serie7" model="fleet.vehicle.model">
+        <field name="name">Serie 7</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_seriex" model="fleet.vehicle.model">
+        <field name="name">Serie X</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_seriez4" model="fleet.vehicle.model">
+        <field name="name">Serie Z4</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_seriem" model="fleet.vehicle.model">
+        <field name="name">Serie M</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_seriehybrid" model="fleet.vehicle.model">
+        <field name="name">Serie Hybrid</field>
+        <field name="brand_id" ref="brand_bmw" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classa" model="fleet.vehicle.model">
+        <field name="name">Class A</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classb" model="fleet.vehicle.model">
+        <field name="name">Class B</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classc" model="fleet.vehicle.model">
+        <field name="name">Class C</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classcl" model="fleet.vehicle.model">
+        <field name="name">Class CL</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classcls" model="fleet.vehicle.model">
+        <field name="name">Class CLS</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classe" model="fleet.vehicle.model">
+        <field name="name">Class E</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classm" model="fleet.vehicle.model">
+        <field name="name">Class M</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classgl" model="fleet.vehicle.model">
+        <field name="name">Class GL</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classglk" model="fleet.vehicle.model">
+        <field name="name">Class GLK</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classr" model="fleet.vehicle.model">
+        <field name="name">Class R</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classs" model="fleet.vehicle.model">
+        <field name="name">Class S</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classslk" model="fleet.vehicle.model">
+        <field name="name">Class SLK</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record>
+    <record id="model_classsls" model="fleet.vehicle.model">
+        <field name="name">SLS</field>
+        <field name="brand_id" ref="brand_mercedes" />
+        <field name="vehicle_type">car</field>
+    </record> -->
+</odoo>

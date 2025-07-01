@@ -29,7 +29,7 @@ class MaterialUsed(models.Model):
     ],
     string="Insurance Type",
     required=True
-)
+    )
     
     policy_expiry_date = fields.Datetime(string="Policy Date",
         default=fields.Datetime.now,

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem name="Car Models" id="menu_root_car_makes" sequence="15" web_icon="contacts,static/description/icon.png" groups="base.group_user" />
+    <menuitem name="Model" id="menu_model" sequence="1" parent="menu_root_car_makes" groups="base.group_user" />
+    <menuitem name="Configuration" id="menu_config" sequence="2" parent="menu_root_car_makes" groups="base.group_user" />
+    <record id="car_make_tree_view" model="ir.ui.view">
+        <field name="name">car.make.tree</field>
+        <field name="model">car.make</field>
+        <field name="arch" type="xml">
+            <tree string="Make" sample="1" multi_edit="1">
+                <field name="name" />
+                <field name="image_128" />
+            </tree>
+        </field>
+    </record>
+    <record id="car_make_form_view" model="ir.ui.view">
+        <field name="name">car.make.form</field>
+        <field name="model">car.make</field>
+        <field name="arch" type="xml">
+            <form string="Model">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <field name="image_128" widget="image" class="oe_avatar" />
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name" placeholder="e.g. Hyundai" required="1" />
+                        </h1>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id='car_make_kanban_view' model='ir.ui.view'>
+        <field name="name">car.make.kanban</field>
+        <field name="model">car.make</field>
+        <field name="arch" type="xml">
+            <kanban default_order="name">
+                <field name="id" />
+                <field name="name" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v" />
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" type="open" class="dropdown-item">Properties</a>
+                                </div>
+                            </div>
+                            <div class="o_kanban_image">
+                                <img alt="img" t-att-src="kanban_image('car.make', 'image_128', record.id.raw_value)" class="o_image_64_max" height="52" />
+                            </div>
+                            <div class="oe_kanban_details">
+                                <h4 class="oe_partner_heading">
+                                    <a type="open" class="o_kanban_record_title">
+                                        <field name="name" />
+                                    </a>
+                                </h4>
+                                <!--  <div>
+                                    <a type="object" name="action_brand_model" class="oe_kanban_fleet_model"/>
+                                    <field name="model_count"/> MODELS
+                                </div> -->
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="car_make_search_view" model="ir.ui.view">
+        <field name="name">car.make.search</field>
+        <field name="model">car.make</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+    <record id="action_car_make" model="ir.actions.act_window">
+        <field name="name">Makes</field>
+        <field name="res_model">car.make</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+    <menuitem id="menu_car_make" action="action_car_make" name="Makes" sequence="1" parent="menu_config" />
+    <record id="car_model_tree_view" model="ir.ui.view">
+        <field name="name">car.model.tree</field>
+        <field name="model">car.model</field>
+        <field name="arch" type="xml">
+            <tree string="Model" sample="1" multi_edit="1">
+                <field name="name" />
+                <field name="make_id" />
+            </tree>
+        </field>
+    </record>
+    <record id="car_model_form_view" model="ir.ui.view">
+        <field name="name">car.model.form</field>
+        <field name="model">car.model</field>
+        <field name="arch" type="xml">
+            <form string="Model">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="e.g. Creta" required="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="make_id" required="1" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_car_model" model="ir.actions.act_window">
+        <field name="name">Models</field>
+        <field name="res_model">car.model</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_car_models" action="action_car_model" name="Model" sequence="1" parent="menu_model" />
+    <record id="car_model_color_tree_view" model="ir.ui.view">
+        <field name="name">car.model.color.tree</field>
+        <field name="model">car.model.color</field>
+        <field name="arch" type="xml">
+            <tree string="Model Color" sample="1" multi_edit="1" editable="bottom">
+                <field name="name" required="1" />
+            </tree>
+        </field>
+    </record>
+    <record id="car_model_color_form_view" model="ir.ui.view">
+        <field name="name">car.model.color.form</field>
+        <field name="model">car.model.color</field>
+        <field name="arch" type="xml">
+            <form string="Model">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="e.g. White" required="1" />
+                        </h1>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_car_model_color" model="ir.actions.act_window">
+        <field name="name">Color</field>
+        <field name="res_model">car.model.color</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_car_model_color" action="action_car_model_color" name="Color" sequence="2" parent="menu_config" />
+    <record id="car_model_variant_tree_view" model="ir.ui.view">
+        <field name="name">car.model.variant.tree</field>
+        <field name="model">car.model.variant</field>
+        <field name="arch" type="xml">
+            <tree string="Model variant" sample="1" multi_edit="1">
+                <field name="name" />
+                <field name="fuel_type" />
+                <field name="model_id" />
+                <field name="make_id" />
+            </tree>
+        </field>
+    </record>
+    <record id="car_model_variant_form_view" model="ir.ui.view">
+        <field name="name">car.model.variant.form</field>
+        <field name="model">car.model.variant</field>
+        <field name="arch" type="xml">
+            <form string="Model variant">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="e.g. Creta" required="1" />
+                        </h1>
+                    </div>
+                    <group col="6">
+                        <field name="fuel_type" />
+                        <field name="model_id" required="1" />
+                        <field name="make_id" required="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_car_model_variant" model="ir.actions.act_window">
+        <field name="name">Variant</field>
+        <field name="res_model">car.model.variant</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_car_model_variant" action="action_car_model_variant" name="Variants" sequence="2" parent="menu_model" />
+</odoo>

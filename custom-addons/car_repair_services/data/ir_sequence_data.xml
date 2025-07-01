@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequences for job card -->
+        <record id="seq_job_card" model="ir.sequence">
+            <field name="name">Job Card</field>
+            <field name="code">job.card</field>
+            <field name="prefix">JOB</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

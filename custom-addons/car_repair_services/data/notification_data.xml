@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="notification_day_30" model="notification.day">
+        <field name="name">30</field>
+    </record>
+    <record id="notification_day_15" model="notification.day">
+        <field name="name">15</field>
+    </record>
+    <record id="notification_day_7" model="notification.day">
+        <field name="name">7</field>
+    </record>
+    <record id="notification_day_3" model="notification.day">
+        <field name="name">3</field>
+    </record>
+    <record id="notification_day_2" model="notification.day">
+        <field name="name">2</field>
+    </record>
+    <record id="notification_day_1" model="notification.day">
+        <field name="name">1</field>
+    </record>
+</odoo>

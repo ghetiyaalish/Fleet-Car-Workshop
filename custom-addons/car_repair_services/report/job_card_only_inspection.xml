@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_job_card_document_only_inspection">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+            <div class="page">
+                <div class="oe_structure" />
+                <div style="margin-top: 7px; margin-bottom: 12px;">
+                    <h3 class="text-center">
+                        <span>Job Card Inspection</span>
+                    </h3>
+                </div>
+                <t t-set="pre_inspection_lines" t-value="doc.print_product_pre_inspection()"/>
+                <table class="table table-sm o_main_table">
+                    <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                    <thead style="display: table-row-group">
+                        <tr>
+                            <th class="text-left" style="border-left: solid gray 1px; border-right: solid gray 1px;">Inspection Name</th>
+                            <th class="text-right">Inspection Value</th>
+                            <th class="text-left" style="border-left: solid gray 1px; border-right: solid gray 1px;">Inspection Name</th>
+                            <th class="text-right" style="border-right: solid gray 1px;">Inspection Value</th>
+                        </tr>
+                    </thead>
+                    <tbody class="sale_tbody">
+                        <t t-foreach="pre_inspection_lines" t-as="line">
+                            <tr style="border-bottom: solid 1px;">
+                                <td style="border-left: solid gray 1px; border-right: solid gray 1px;">
+                                    <span t-if="line[0]" t-esc="line[0]"/>
+                                    <span t-else=""/>
+                                </td>
+                                <td class="text-left">
+                                    <span t-if="len(line) > 1" t-esc="line[1]" />
+                                    <span t-else=""/>
+                                </td>
+                                <td style="border-left: solid gray 1px; border-right: solid gray 1px;">
+                                    <span t-if="len(line) > 2" t-esc="line[2]" />
+                                    <span t-else=""/>
+                                </td>
+                                <td class="text-left" style="border-right: solid gray 1px;">
+                                    <span t-if="len(line) > 3" t-esc="line[3]" />
+                                    <span t-else=""/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+    <template id="report_job_card_only_inspection">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="car_repair_services.report_job_card_document_only_inspection" t-lang="doc.partner_id.lang" />
+            </t>
+        </t>
+    </template>
+    <record id="action_report_job_card_only_inspection" model="ir.actions.report">
+        <field name="name">Job Card Only Inspection</field>
+        <field name="model">job.card</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">car_repair_services.report_job_card_only_inspection</field>
+        <field name="report_file">car_repair_services.report_job_card_only_inspection</field>
+        <field name="print_report_name">('Job Card - %s' % (object.name))</field>
+        <field name="binding_model_id" ref="model_job_card" />
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_job_card" />
+    </record>
+</odoo>

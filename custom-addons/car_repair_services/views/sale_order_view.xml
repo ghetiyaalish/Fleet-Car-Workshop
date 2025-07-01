@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- sale action inherit -->
+    <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+        <field name="name">Estimation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding" />
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation" />
+        <field name="context">{'search_default_my_quotation': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p>
+            <p>
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br /> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+    <record id="sale.action_orders" model="ir.actions.act_window">
+        <field name="name">Approved Estimation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale" />
+        <field name="context">{}</field>
+        <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p>
+            <p>
+                Once the quotation is confirmed, it becomes a sales order.<br /> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+    <menuitem id="sale.menu_sale_order" name="Approved Estimation" action="sale.action_orders" parent="sale.sale_order_menu" sequence="2" groups="sales_team.group_sale_salesman" />
+    <menuitem id="sale.res_partner_menu" parent="sale.sale_order_menu" action="account.res_partner_action_customer" sequence="0" groups="sales_team.group_sale_salesman" />
+    <menuitem id="sale.menu_sale_quotations" action="sale.action_quotations_with_onboarding" parent="sale.sale_order_menu" sequence="1" groups="sales_team.group_sale_salesman" />
+    <!-- sale form view inherit -->
+    <record id="order_form_view_inherit" model="ir.ui.view">
+        <field name="name">sale.ordern.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="reg_no" />
+                <label for="model_id" />
+                <div class="o_row">
+                    <field name="make_id" />
+                    <field name="model_id" />
+                </div>
+                <field name="variant_id" />
+                <field name="fuel_type" />
+                <field name="color_id" />
+            </xpath>
+            <field name="payment_term_id" position="after">
+                <field name="job_card_id" invisible="job_card_id == False" readonly="1"/>
+                <field name="run_km"/>
+            </field>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
+                <field name="approval" optional="hide" required="1"/>
+                <field name="categ_id" options="{'no_open':True,'no_create': True}" string="Category" optional="hide"/>
+                <field name="model_id" invisible="1" />
+                <field name="product_ids" widget="many2many_tags" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                <field name="labour_charge"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True),('id', 'in', product_ids)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo> 

@@ -1,0 +1,21 @@
+.o_product_catalog {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+}
+
+.o_product_catalog .o_kanban_view {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  padding: 16px;
+  overflow: auto;
+}
+
+.o_product_catalog .o_list_view {
+  width: 250px;
+  border-right: 1px solid #ddd;
+  overflow: auto;
+}
+/*# sourceMappingURL=product_catalog.css.map */

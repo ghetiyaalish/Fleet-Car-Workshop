@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_category_labour" model="product.category">
+        <field name="name">Labour</field>
+    </record>
+    <record id="product_category_all_car" model="product.category">
+        <field name="name">All Cars</field>
+    </record>
+</odoo>

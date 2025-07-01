@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web.external_layout_boxed">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+            <div class="o_boxed_header">
+                <div class="row mb8">
+                    <div class="col-5">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo" />
+                    </div>
+                    <div class="col-3">
+                    </div>
+                    <div class="col-4">
+                        <!-- <h4 class="mt0" t-field="company.report_header" /> -->
+                        <div style="margin-top: 15px;">
+                            <span t-if="company.name">
+                                <h3>
+                                    <strong>Yash Motors</strong>
+                                </h3>
+                            </span>
+                            <span>
+                                <span t-field="company.street" />,
+                                <br/><span t-field="company.street2"/>
+                                <br />
+                                <span t-field="company.city" />,&#160;
+                                <span t-field="company.state_id.name" />,&#160;
+                                <span t-field="company.country_id.name" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <!-- <t t-call="web.address_layout"/> -->
+            </div>
+            <t t-out="0" />
+        </div>
+        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
+            <div class="row">
+                <div class="col-2">
+                </div>
+                <div class="col-8 text-center">
+                    <strong>Mobile:</strong><span t-field="company.mobile" />,
+                    <strong>Email:</strong><span t-field="company.email" />
+                </div>
+                <div class="col-2 text-right" t-if="report_type == 'pdf'">
+                    Page: <span class="page" /> / <span class="topage" />
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

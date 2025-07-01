@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="insurance_company_tree_view" model="ir.ui.view">
+        <field name="name">insurance.company.tree</field>
+        <field name="model">insurance.company</field>
+        <field name="arch" type="xml">
+            <tree string="Insurance Company" sample="1" multi_edit="1" editable="top">
+                <field name="name" required="1" />
+            </tree>
+        </field>
+    </record>
+    <record id="insurance_company_form_view" model="ir.ui.view">
+        <field name="name">insurance.company.tree</field>
+        <field name="model">insurance.company</field>
+        <field name="arch" type="xml">
+            <form string="Insurance Company">
+                <sheet>
+                    <h1>
+                        <field name="name" required="1" />
+                    </h1>
+                </sheet>
+            </form>
+        </field>    
+    </record>
+    <record id="action_insurance_company" model="ir.actions.act_window">
+        <field name="name">Insurance Company</field>
+        <field name="res_model">insurance.company</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_insurance_company" action="action_insurance_company" name="Insurance Company" sequence="1" parent="contacts.res_partner_menu_config" />
+
+
+    <record id="insurance_broker_tree_view" model="ir.ui.view">
+        <field name="name">insurance.broker.tree</field>
+        <field name="model">insurance.broker</field>
+        <field name="arch" type="xml">
+            <tree string="Insurance broker" sample="1" multi_edit="1" editable="top">
+                <field name="name" required="1" />
+            </tree>
+        </field>
+    </record>
+    <record id="insurance_broker_form_view" model="ir.ui.view">
+        <field name="name">insurance.broker.tree</field>
+        <field name="model">insurance.broker</field>
+        <field name="arch" type="xml">
+            <form string="Insurance broker">
+                <sheet>
+                    <h1>
+                        <field name="name" required="1" />
+                    </h1>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_insurance_broker" model="ir.actions.act_window">
+        <field name="name">Insurance broker</field>
+        <field name="res_model">insurance.broker</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_insurance_broker" action="action_insurance_broker" name="Insurance Broker" sequence="2" parent="contacts.res_partner_menu_config" />
+
+    <record id="partner_notification_tree_view" model="ir.ui.view">
+        <field name="name">partner.notification.tree</field>
+        <field name="model">partner.notification</field>
+        <field name="arch" type="xml">
+            <tree string="Notification" sample="1" multi_edit="1" editable="top">
+                <field name="name" />
+                <field name="notification_day_ids" widget="many2many_tags" />
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+    <record id="action_partner_notification" model="ir.actions.act_window">
+        <field name="name">Notification</field>
+        <field name="res_model">partner.notification</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem id="menu_partner_notification" action="action_partner_notification" name="Customer Notification" sequence="2" parent="contacts.res_partner_menu_config" />
+    <record id="ir_attachment_tree_view" model="ir.ui.view">
+        <field name="name">ir.attachment.tree</field>
+        <field name="model">ir.attachment</field>
+        <field name="arch" type="xml">
+            <tree string="Attachment" sample="1" multi_edit="1" editable="top">
+                <field name="partner_id"/>
+                <field name="doc_name" />
+                <field name="name" invisible="1" />
+                <field name="datas" filename="name" string="Document" />
+                <field name="res_model" invisible="1" />
+                <field name="res_id" invisible="1" />
+            </tree>
+        </field>
+    </record>
+    <record id="action_ir_attachment" model="ir.actions.act_window">
+        <field name="name">Customer Attachment</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="ir_attachment_tree_view" />
+    </record>
+    <menuitem id="menu_ir_attachment" action="action_ir_attachment" name="Customer Attachment" sequence="3" parent="contacts.res_partner_menu_config" />
+    <record id="res_partner_tree_inh_view" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <field name="phone" position="before">
+                <field name="mobile" string="Mobile (W)" />
+                <field name="reg_no" />
+                <field name="model_id" />
+                <field name="variant_id" optional="hide"/>
+                <field name="fuel_type" optional="hide"/>
+                <field name="street" optional="hide"/>
+                <field name="street2" optional="hide"/>
+                <field name="new_name" readonly="1" invisible="1"/>
+                <field name="engine_no" optional="hide"/>
+                <field name="chassis_no" optional="hide"/>
+                <field name="insurance_company" optional="hide"/>
+                <field name="insurance_policy_no" optional="hide"/>
+                <field name="policy_expiry_date" optional="hide"/>
+                <field name="claim" optional="hide"/>
+                <field name="insurance_type_ids" widget="many2many_tags" optional="hide"/>
+                <field name="insurance_provider_ids" widget="many2many_tags" optional="hide"/>
+                <field name="insurance_broker" optional="hide"/>
+                <field name="pan_no" optional="hide"/>
+                <field name="adhar_no" optional="hide"/>
+            </field>
+            <field name="vat" position="replace">
+                <field name="vat" string="GST No." optional="hide" />
+            </field>
+            <field name="phone" position="replace">
+                <field name="phone" optional="hide" />
+            </field>
+            <field name="email" position="replace">
+                <field name="email" optional="hide" />
+            </field>
+            <field name="user_id" position="replace">
+                <field name="user_id" optional="hide" widget="many2one_avatar_user" domain="[('share', '=', False)]" />
+            </field>
+            <field name="city" position="replace">
+                <field name="city" optional="hide" />
+            </field>
+            <field name="state_id" position="replace">
+                <field name="state_id" optional="hide" readonly="1" />
+            </field>
+            <field name="country_id" position="replace">
+                <field name="country_id" optional="hide" readonly="1" />
+            </field>
+            <field name="activity_ids" position="replace">
+                <field name="activity_ids" optional="hide" widget="tree_activity" />
+            </field>
+            <field name="company_id" position="replace">
+                <field name="total_invoiced_due" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_partner_property_form_inh" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='accounting']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='accounting_disabled']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_partner_form_inh_view" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="company_type" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="parent_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <xpath expr="//form/sheet/div/h1" position="replace">
+                <h1>
+                    <field id="company" class="text-break" name="name" default_focus="1" placeholder="Customer Name" required="type == 'contact' and is_company == True" invisible="is_company == False" />
+                    <field id="individual" class="text-break" name="name" default_focus="1" placeholder="Customer Name" required="type == 'contact' and is_company == False" invisible="is_company == True" />
+                </h1>
+            </xpath>
+            <xpath expr="//form/sheet/group/group[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group[1]" position="attributes">
+                <attribute name="string">Contact Details</attribute>
+            </xpath>
+            <field name="vat" position="replace">
+                <field name="vat" string="GST No." />
+            </field>
+            <xpath expr="//span[@name='address_name']" position="before">
+                <field name="contact_type"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group[1]" position="inside">
+                <!-- <field name="function" placeholder="e.g. Sales Director" invisible=is_company == True" /> -->
+                <field name="phone" widget="phone" />
+                <field name="mobile" widget="phone" string="Mobile (W)" required="1" />
+                <field name="user_ids" invisible="1" />
+                <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids != []" />
+                <!-- <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com" /> -->
+                <!-- <field name="title" options="{&quot;no_open&quot;: True}" placeholder="e.g. Mister" invisible=is_company == True" /> -->
+                <field name="active_lang_count" invisible="1" />
+                <label for="lang" invisible="active_lang_count &lt;= 1" />
+                <div class="o_row" invisible="active_lang_count &lt;= 1">
+                    <field name="lang" />
+                    <button type="action" name="56" class="btn-sm btn-link mb4 fa fa-globe" aria-label="More languages" groups="base.group_system" title="More languages" />
+                </div>
+                <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..." />
+            </xpath>
+            <xpath expr="//form/sheet/group/group[1]" position="after">
+                <group string="Car Details">
+                    <field name="reg_no" required="contact_type == 'customer'"/>
+                    <label for="model_id" />
+                    <div class="o_row">
+                        
+                        <field name="make_id" placeholder="Select Make" required="contact_type == 'customer'" />
+                        <field name="model_id" domain="[('make_id', '=', make_id)]" placeholder="Model Name" required="contact_type == 'customer'"/>
+                    </div>
+                    <label for="variant_id" />
+                    <div class="o_row">
+                        <field name="variant_id" domain="[('model_id', '=', model_id)]" />
+                        <field name="color_id" placeholder="Car Color" />
+                    </div>
+                    <label for="fuel_type" />
+                    <div class="o_row">
+                        <field name="fuel_type" />
+                        <field name="run_km" placeholder="Run KM./Year" />
+                    </div>
+                    <field name="engine_no" />
+                    <field name="chassis_no" />
+                    <field name="insurance_company" />
+                    <field name="insurance_broker"/>
+                    <field name="insurance_policy_no" />
+                    <field name="policy_expiry_date" />
+                    <field name="claim"/>
+                    <field name="insurance_type_ids" widget="many2many_tags" />
+                    <field name="insurance_provider_ids" widget="many2many_tags" />
+                    <field name="new_name" invisible="1" />
+                </group>
+            </xpath>
+            <xpath expr="//notebook/page[@name='contact_addresses']" position="before">
+                <page string="Extra Info">
+                    <group>
+                        <group>
+                            <field name="pan_no" />
+                            <field name="adhar_no" />
+                            <field name="birth_date" />
+                        </group>
+                        <group>
+                            <field name="puc_expiry_date" />
+                            <field name="cng_expiry_date" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//notebook/page[@name='contact_addresses']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Attachment" name="attachment">
+                    <field name="attachment_ids" mode="tree">
+                        <tree string="Attachment" editable="top">
+                            <field name="partner_id" invisible="1" />
+                            <field name="doc_name" />
+                            <field name="name" invisible="1" />
+                            <field name="datas" filename="name" string="Document" />
+                            <field name="res_model" invisible="1" />
+                            <field name="res_id" invisible="1" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_view_jobcard" icon="fa-usd" invisible="job_card_count == 0">
+                        <field string="Job card" name="job_card_count" widget="statinfo"/>
+                    </button>
+                </div>
+        </field>
+    </record>
+    <record id="view_res_partner_filter_inh_view" model="ir.ui.view">
+        <field name="name">res.partner.Select.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <field name="parent_id" position="replace">
+                <field name="reg_no" />
+                <field name="model_id" />
+            </field>
+            <field name="name" position="replace">
+                <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('reg_no', 'ilike', self), ('model_id', 'ilike', self)]" />
+            </field>
+            <xpath expr="//filter[@name='type_person']" position="replace"></xpath>
+            <xpath expr="//filter[@name='type_company']" position="replace"></xpath>
+            <xpath expr="//filter[@name='group_company']" position="replace"></xpath>
+            <xpath expr="//filter[@name='salesperson']" position="before">
+                <filter name="model" string="Model" domain="[]" context="{'group_by' : 'model_id'}" />
+            </xpath>
+        </field>
+    </record>
+    <record id="res_partner_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view" />
+        <field name="arch" type="xml">
+            <field name="display_name" position="after">
+                <field name="reg_no" />
+                <field name="model_id" />
+                <field name="mobile" />
+            </field>
+            <xpath expr="//field[@name='display_name']" position="replace">
+                <field name="name" />
+            </xpath>
+<!--            <xpath expr="//div[hasclass('oe_kanban_partner_categories')]" position="before">-->
+<!--                <span>-->
+<!--                    <span t-if="record.reg_no.raw_value">-->
+<!--                        [-->
+<!--                        <field name="reg_no" />]-->
+<!--                    </span>&#160;&#160;&#160;-->
+<!--                    <span t-if="record.model_id.raw_value">-->
+<!--                        [-->
+<!--                        <field name="model_id" />]-->
+<!--                    </span>-->
+<!--                </span>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//div[hasclass('oe_kanban_details')]/ul" position="replace">-->
+<!--                <ul>-->
+<!--                    <span t-if="record.mobile.raw_value">-->
+<!--                        <field name="mobile" />-->
+<!--                    </span>&#160;&#160;&#160;&#160;&#160;&#160;-->
+<!--                    <span t-if="record.total_invoiced_due.raw_value" class="alert-danger">-->
+<!--                        <strong><field name="total_invoiced_due" /></strong>-->
+<!--                    </span>-->
+<!--                </ul>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+</odoo>
