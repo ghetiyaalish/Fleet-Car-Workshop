@@ -30,8 +30,43 @@ class JobCard(models.Model):
     _inherit = ['portal.mixin', 'product.catalog.mixin','mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _order = 'job_card_date desc, id desc'
     
+    def _get_product_catalog_line_field_name(self):
+        return 'job_card_line'
+    
+    # working
+    # @api.depends('job_card_line.price_subtotal', 'job_card_line.price_tax', 'job_card_line.price_total','job_card_line.labour_charge')
+    # def _compute_amounts(self):
+    #     """Compute the total amounts of the SO."""
+    #     for order in self:
+    #         order = order.with_company(order.company_id)
+    #         job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
 
-    @api.depends('job_card_line.price_subtotal', 'job_card_line.price_tax', 'job_card_line.price_total')
+    #         if order.company_id.tax_calculation_rounding_method == 'round_globally':
+    #             tax_results = order.env['account.tax']._compute_taxes([
+    #                 line._convert_to_tax_base_line_dict()
+    #                 for line in job_card_line
+    #             ])
+    #             labour_total = tax_results['totals']
+    #             totals = tax_results['totals']
+    #             amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
+    #             amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+    #         else:
+    #             amount_untaxed = sum(job_card_line.mapped('price_subtotal'))
+    #             amount_tax = sum(job_card_line.mapped('price_tax'))
+                
+    #             # total_labour_charge = sum(job_card_line.mapped('labour_charge'))
+                
+    #         # total_labour_charge = sum(job_card_line.mapped('labour_charge'))
+            
+    #         order.amount_untaxed = amount_untaxed
+    #         order.amount_tax = amount_tax
+    #         order.amount_total = order.amount_untaxed + order.amount_tax 
+    #         _logger.info(f"===============  amount untaxed  job card  ===={order.amount_untaxed}")
+            
+    #         _logger.info(f"=============== amount total job card  ===={order.amount_total}")
+    
+    # working
+    @api.depends('job_card_line.price_subtotal', 'job_card_line.price_tax', 'job_card_line.price_total', 'job_card_line.labour_charge')
     def _compute_amounts(self):
         """Compute the total amounts of the SO."""
         for order in self:
@@ -46,51 +81,279 @@ class JobCard(models.Model):
                 totals = tax_results['totals']
                 amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
                 amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
+                
             else:
                 amount_untaxed = sum(job_card_line.mapped('price_subtotal'))
                 amount_tax = sum(job_card_line.mapped('price_tax'))
 
-            order.amount_untaxed = amount_untaxed
+            total_labour_charge = sum(job_card_line.mapped('labour_charge') or [0.0])
+            # _logger.info(f"Computed values - amount_untaxed: {amount_untaxed}, amount_tax: {amount_tax}, total_labour_charge: {total_labour_charge}")
+
+            order.amount_untaxed = amount_untaxed 
             order.amount_tax = amount_tax
-            order.amount_total = order.amount_untaxed + order.amount_tax
-            _logger.info(f"====totals job card==={order.amount_total}")
-   
-    @api.depends_context('lang')
-    @api.depends('job_card_line.tax_id', 'job_card_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
-    def _compute_tax_totals(self):
+            # order.job_card_line.labour_charge = total_labour_charge 
+            order.amount_total = order.amount_untaxed + order.amount_tax 
+            
+            _logger.info(f"====  total job card  alish alish ghetiya  ===={order.amount_total}")
         
+    
+#    ========================================================================================
+    # @api.depends_context('lang')
+    # @api.depends('job_card_line.tax_id', 'job_card_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
+    # def _compute_tax_totals(self):
+        
+    #     for order in self:
+    #         order = order.with_company(order.company_id)
+    #         job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
+    #         order.tax_totals = order.env['account.tax']._prepare_tax_totals(
+    #             [x._convert_to_tax_base_line_dict() for x in job_card_line],
+    #             order.currency_id or order.company_id.currency_id,
+    #         )
+    #         _logger.info(f"=====tax total====={order.tax_totals}")
+    
+    # @api.depends_context('lang')
+    # @api.depends('job_card_line.tax_id', 'job_card_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id', 'job_card_line.labour_charge')
+    # def _compute_tax_totals(self):
+    #     for order in self:
+    #         order = order.with_company(order.company_id)
+    #         job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
+    #         tax_totals = order.env['account.tax']._prepare_tax_totals(
+    #             [x._convert_to_tax_base_line_dict() for x in job_card_line],
+    #             order.currency_id or order.company_id.currency_id,
+    #         )
+    #         # Initialize default values if keys are missing
+    #         tax_totals.setdefault('amount_untaxed', 0.0)
+    #         tax_totals.setdefault('amount_tax', 0.0)
+    #         tax_totals.setdefault('amount_total', 0.0)
+    #         tax_totals.setdefault('groups_by_subtotal', {}).setdefault('untaxed', [])
+
+    #         # Use the amount_total from _compute_amounts for consistency
+    #         tax_totals['amount_total'] = order.amount_total
+    #         tax_totals['amount_untaxed'] = order.amount_untaxed
+    #         tax_totals['amount_tax'] = order.amount_tax
+
+    #         # Optionally add labour_charge breakdown for visibility
+    #         total_labour_charge = sum(job_card_line.mapped('labour_charge') or [0.0])
+    #         if total_labour_charge > 0:
+    #             tax_totals['groups_by_subtotal']['untaxed'].append({
+    #                 'tax_group_name': 'Labour Charge',
+    #                 'tax_group_amount': total_labour_charge,
+    #                 'tax_group_base_amount': total_labour_charge,
+    #             })
+
+    #         order.tax_totals = tax_totals
+    #         _logger.info(f"=====tax total====={order.tax_totals}")
+    
+    
+    # working
+    # @api.depends_context('lang')
+    # @api.depends('job_card_line.tax_id', 'job_card_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id', 'job_card_line.labour_charge')
+    # def _compute_tax_totals(self):
+    #     for order in self:
+    #         order = order.with_company(order.company_id)
+    #         job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
+    #         tax_totals = order.env['account.tax']._prepare_tax_totals(
+    #             [x._convert_to_tax_base_line_dict() for x in job_card_line],
+    #             order.currency_id or order.company_id.currency_id,
+    #         )
+            
+            
+    #         # Initialize default values if keys are missing
+    #         tax_totals.setdefault('amount_untaxed', 0.0)
+    #         tax_totals.setdefault('amount_tax', 0.0)
+    #         tax_totals.setdefault('amount_total', 0.0)
+    #         tax_totals.setdefault('groups_by_subtotal', {}).setdefault('untaxed', [])
+    #         total_labour_charge = sum(job_card_line.mapped('labour_charge') or [0.0])
+            
+    #         # Use values from _compute_amounts for consistency
+    #         tax_totals['amount_untaxed'] = order.amount_untaxed
+    #         tax_totals['amount_tax'] = order.amount_tax
+    #         tax_totals['amount_total'] = order.amount_total
+
+    #         # Add labour_charge as a separate untaxed breakdown
+    #         # total_labour_charge = sum(job_card_line.mapped('labour_charge') or [0.0])
+    #         if total_labour_charge > 0:
+    #             tax_totals['groups_by_subtotal']['untaxed'].append({
+    #                 'tax_group_name': 'Labour Charge',
+    #                 'tax_group_amount': total_labour_charge,
+    #                 'tax_group_base_amount': total_labour_charge,
+    #             })
+    #         _logger.info(f"===== labour charge Alish====={tax_totals}")
+
+    #         order.tax_totals = tax_totals
+    #         _logger.info(f"=====tax Alish total====={order.tax_totals}")
+
+    # working
+    # @api.depends_context('lang')
+    # @api.depends('job_card_line.tax_id', 'job_card_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id', 'job_card_line.labour_charge')
+    # def _compute_tax_totals(self):
+    #     for order in self:
+    #         order = order.with_company(order.company_id)
+    #         job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
+    #         tax_totals = order.env['account.tax']._prepare_tax_totals(
+    #             [x._convert_to_tax_base_line_dict() for x in job_card_line],
+    #             order.currency_id or order.company_id.currency_id,
+    #         )
+            
+    #         _logger.info(f"=====Alish Tax total 1====={tax_totals}")
+
+    #         tax_totals.setdefault('amount_untaxed', 0.0)
+    #         tax_totals.setdefault('amount_tax', 0.0)
+    #         tax_totals.setdefault('amount_total', 0.0)
+            
+            
+    #         tax_totals.setdefault('groups_by_subtotal', {}).setdefault('untaxed', [])
+    #         tax_totals.setdefault('groups_by_subtotal', {}).setdefault('taxable', [])  # For tax groups like GST
+
+    #         # Use values from _compute_amounts for consistency
+    #         tax_totals['amount_untaxed'] = order.amount_untaxed
+    #         tax_totals['amount_tax'] = order.amount_tax
+    #         total_labour_charge = sum(job_card_line.mapped('labour_charge') or [0.0])
+    #         tax_totals['amount_total'] = order.amount_total 
+    #         _logger.info(f'amount_total  ============ totttttaal==========={tax_totals}')
+
+    #         # Get existing tax groups to insert labour_charge after GST
+    #         existing_groups = tax_totals['groups_by_subtotal'].get('taxable', [])
+            
+    #         _logger.info(f'taaaaaax totttttaal==========={tax_totals}')
+    #         if total_labour_charge > 0:
+    #             # Find the position to insert labour_charge after GST
+    #             insert_pos = 0
+    #             for i, group in enumerate(existing_groups):
+    #                 if 'GST' in group.get('tax_group_name', '') or 'CGST' in group.get('tax_group_name', '') or 'SGST' in group.get('tax_group_name', ''):
+    #                     insert_pos = i + 1
+    #                     break
+                
+    #             # Add labour_charge as a separate group after GST
+    #             labour_group = {
+    #                 'tax_group_name': 'Labour Charge',
+    #                 'tax_group_amount': total_labour_charge,
+    #                 'tax_group_base_amount': total_labour_charge,
+    #             }
+    #             _logger.info(f"=====existing group before labour charge Alish====={existing_groups}")
+                
+    #             existing_groups.insert(insert_pos, labour_group)
+    #             _logger.info(f"=====existing group after labour charge Alish====={existing_groups}")
+                
+    #             tax_totals['groups_by_subtotal']['taxable'] = existing_groups
+                
+    #         tax_totals['amount_total'] = order.amount_untaxed + order.amount_tax 
+    #         order.tax_totals = tax_totals  
+    #         _logger.info(f"===== labour charge Alish====={tax_totals}")
+    #         _logger.info(f"=====tax Alish total====={order.tax_totals}")
+    
+    
+    # perfect working
+    @api.depends_context('lang')
+    @api.depends('job_card_line.tax_id', 'job_card_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id', 'job_card_line.labour_charge')
+    def _compute_tax_totals(self):
         for order in self:
             order = order.with_company(order.company_id)
             job_card_line = order.job_card_line.filtered(lambda x: not x.display_type)
-            order.tax_totals = order.env['account.tax']._prepare_tax_totals(
+            
+            # Compute standard tax totals
+            tax_totals = order.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in job_card_line],
                 order.currency_id or order.company_id.currency_id,
             )
-            _logger.info(f"=====tax total==={order.tax_totals}")
-
             
+            # Initialize default structure
+            tax_totals.setdefault('amount_untaxed', 0.0)
+            tax_totals.setdefault('amount_tax', 0.0)
+            tax_totals.setdefault('amount_total', 0.0)
+            tax_totals.setdefault('groups_by_subtotal', {})
+            
+            # Calculate labour charge
+            total_labour_charge = sum(job_card_line.mapped('labour_charge') or [0.0])
+            
+            # Add labour charge as a separate group
+            if 'Labour' not in [g.get('tax_group_name') for g in tax_totals['groups_by_subtotal'].get('Untaxed Amount', [])]:
+                tax_totals['groups_by_subtotal'].setdefault('Untaxed Amount', []).append({
+                    'tax_group_name': 'Labour Charge',
+                    'tax_group_amount': total_labour_charge,
+                    'tax_group_base_amount': total_labour_charge,
+                })
+            
+            # Update totals to include labour charge
+            tax_totals['amount_total'] = tax_totals['amount_untaxed'] + tax_totals['amount_tax'] + total_labour_charge
+            
+            # Force the display order you want
+            display_groups = []
+            if tax_totals['amount_untaxed']:
+                display_groups.append({
+                    'group_name': 'Untaxed Amount',
+                    'amount': tax_totals['amount_untaxed']
+                })
+            tax_lines = tax_totals['groups_by_subtotal'].get('Untaxed Amount', [])
+
+            # Add tax groups (SGST, CGST)
+            for group in tax_totals['groups_by_subtotal'].get('Untaxed Amount', []):
+                if 'GST' in group.get('tax_group_name', ''):
+                    display_groups.append({
+                        'group_name': group['tax_group_name'],
+                        'amount': group['tax_group_amount']
+                    })
+                
+            # Add Labour Charge
+            if total_labour_charge:
+                display_groups.append({
+                    'group_name': 'Labour Charge',
+                    'amount': total_labour_charge
+                })
+            
+            # Add the formatted display structure
+            tax_totals['display_groups'] = display_groups
+            tax_totals['formatted_display'] = self._format_tax_totals_for_display(tax_totals)
+            
+            order.tax_totals = tax_totals
+
+    
+    
+    
+    def _format_tax_totals_for_display(self, tax_totals):
+        """ Helper method to format the tax totals for display """
+        currency = self.currency_id or self.company_id.currency_id
+        lines = []
+        
+        # Add Untaxed Amount
+        lines.append({
+            'name': 'Untaxed Amount',
+            'amount': formatLang(self.env, tax_totals['amount_untaxed'], currency_obj=currency)
+        })
+        
+        # Add Tax Groups (SGST, CGST)
+        for group in tax_totals.get('groups_by_subtotal', {}).get('Untaxed Amount', []):
+            if 'GST' in group.get('tax_group_name', ''):
+                lines.append({
+                    'name': group['tax_group_name'],
+                    'amount': formatLang(self.env, group['tax_group_amount'], currency_obj=currency)
+                })
+            
+
+        
+        # Add Labour Charge
+        total_labour = sum(self.job_card_line.mapped('labour_charge') or [0.0])
+        if total_labour:
+            lines.append({
+                'name': 'Labour Charge',
+                'amount': formatLang(self.env, total_labour, currency_obj=currency)
+            })
+        
+        # Add Total
+        lines.append({
+            'name': 'Total',
+            'amount': formatLang(self.env, tax_totals['amount_total'], currency_obj=currency)
+        })
+        
+        return lines
+    
+    
+    # =====================================================================
     @api.model
     def _get_default_non_gst_company(self):
         ''' Get the default non gst company'''
         company = self.env['res.company'].search([('vat','=',False)], limit=1)
         return company.id or self.env.company.id
-
-    # def _get_product_catalog_order_data(self, products, **kwargs):
-    #     res = super()._get_product_catalog_order_data(products, **kwargs)
-    #     for product in products:
-    #         res[product.id] |= {
-    #             'price': product.standard_price,
-    #         }
-    #     return res
-    
-    # def _get_product_catalog_record_lines(self, product_ids):
-    #     grouped_lines = defaultdict(lambda: self.job_card_line.browse([]))
-    #     for line in self.job_card_line:
-    #         if line.product_id.id not in product_ids:
-    #             continue
-    #         grouped_lines[line.product_id] |= line
-    #     return grouped_lines
-
 
 
     active = fields.Boolean(default=True, string="Active")
@@ -147,12 +410,7 @@ class JobCard(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=_get_default_non_gst_company)
     estimate_count = fields.Integer(string='Estimate Count', compute='_get_estimate_count')
 
-    # @api.constrains('partner_id')
-    # def _check_partner_id(self):
-    #     if self.partner_id:
-    #         existJob = self.search_count([('state','not in',('done','cancel')),('id','!=', self.id)])
-    #         if existJob:
-    #             raise UserError(_('You cannot chnage the Customer!'))
+    
 
     @api.constrains('reg_no')
     def _check_jobcard_status(self):
@@ -161,13 +419,7 @@ class JobCard(models.Model):
             if existJob:
                 raise UserError(_('You cannot create New Job Card. Please done existing Job Card first!'))
 
-    # @api.constrains('run_km')
-    # def _check_run_km(self):
-    #     if self.run_km:
-    #         existJob = self.search_count([('state','not in',('done','cancel')),('id','!=', self.id)])
-    #         if existJob:
-    #             raise UserError(_('You cannot chnage the Odometer(KM)!'))
-
+    
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -216,9 +468,7 @@ class JobCard(models.Model):
         self.send_job_ard_whatsapp_notification()
         return self.write({'state': 'assign'})
 
-    # def action_check(self):
-    #     return self.write({'state': 'check'})
-
+    
     def action_create_estimate(self):
         if self.job_card_line:
             sale_order = self.env['sale.order'].create({
@@ -259,17 +509,20 @@ class JobCard(models.Model):
                         'target': 'current',
                         'domain': '[]',
                 }
+    
+
+    
     def _update_order_line_info(self, product_id, quantity, **kwargs):
         """
         Add or update product in job card line based on quantity.
         :param int product_id: The product, as a `product.product` id.
-        :return: The created or updated line.
+        :return: The unit price of the created or updated line.
         """
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
         _logger.info(f"=====unit price 1===:{product.lst_price}")
         # Get price and tax
-        unit_price = 100.00
+        unit_price = product.lst_price
         _logger.info(f"=====unit price 2===:{unit_price}")
         
         taxes = product.taxes_id
@@ -280,13 +533,16 @@ class JobCard(models.Model):
         if pol:
             if quantity != 0:
                 pol.update({
+                    # 'job_card_id': self.id,
+                    # 'product_id': product_id,
                     'product_uom_qty': quantity,
                     'price_unit': unit_price,
                     'tax_id': [(6, 0, taxes.ids)],
+                    'name':product.name
                 })
             else:
                 pol.unlink()
-                return None
+                return (unit_price)
         elif quantity > 0:
             pol = self.env['job.card.line'].create({
                 'job_card_id': self.id,
@@ -294,12 +550,16 @@ class JobCard(models.Model):
                 'product_uom_qty': quantity,
                 'price_unit': unit_price,
                 'tax_id': [(6, 0, taxes.ids)],
+                'name': product.name,
+                
+                
             })
 
-        return pol
-
-
+        return (unit_price)
     
+    
+
+        
     @api.depends('state')
     def _get_estimate_count(self):
         for rec in self:
@@ -339,6 +599,7 @@ class JobCard(models.Model):
         return res
     
     def _get_product_catalog_record_lines(self, product_ids):
+        self.ensure_one()
         grouped_lines = defaultdict(lambda: self.env['job.card.line'])
         for line in self.job_card_line:
             if line.product_id.id not in product_ids:
@@ -346,12 +607,6 @@ class JobCard(models.Model):
             grouped_lines[line.product_id] |= line
         return grouped_lines
     
-    # def action_open_job_card_with_inspection_popup(self):
-    #     inspection_obj = self.env['job.card.inspection']
-    #     inspection_id = inspection_obj.search([('job_card_id', '=', self.id)], limit=1)
-
-    #     if not inspection_id:
-    #         inspection_id = inspection_obj.create({'job_card_id': self.id})
     
     def action_open_job_card_with_inspection_popup(self):
         return {
@@ -379,6 +634,8 @@ class JobCardLine(models.Model):
     _description = 'Job Card Line'
     _order = 'sequence, id'
 
+# =====================================================================
+    # working
     def _convert_to_tax_base_line_dict(self, **kwargs):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
         defined on account.tax.
@@ -388,6 +645,7 @@ class JobCardLine(models.Model):
         # rrr = **kwargs
         _logger.info(f"====helloooo")
         self.ensure_one()
+        # total_price_unit = self.price_unit + (self.labour_charge)
         return self.env['account.tax']._convert_to_tax_base_line_dict(
             self,
             partner=self.job_card_id.partner_id,
@@ -397,11 +655,14 @@ class JobCardLine(models.Model):
             price_unit=self.price_unit,
             quantity=self.product_uom_qty,
             discount=self.discount,
-            price_subtotal=self.price_subtotal,
+            price_subtotal=self.price_subtotal ,
             **kwargs,
         )
     
-    
+        
+# =============================================================
+    # working
+
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id', 'labour_charge')
     def _compute_amount(self):
         """
@@ -414,15 +675,18 @@ class JobCardLine(models.Model):
                 line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'] + int(line.labour_charge),
-                'price_subtotal': taxes['total_excluded'] + int(line.labour_charge),
+                'price_subtotal': taxes['total_excluded'] ,
             })
             else:
                 line.update({
                     'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
-                    'price_total': taxes['total_included'],
-                    'price_subtotal': taxes['total_excluded'],
+                    'price_total': taxes['total_included'] ,
+                    'price_subtotal': taxes['total_excluded'] ,
+                    
                 })
-
+    
+    
+# =============================================================
     @api.depends('categ_id', 'model_id')
     def _compute_prroduct_ids(self):
         labourCategId = self.env.ref('car_repair_services.product_category_labour')
@@ -484,6 +748,8 @@ class JobCardLine(models.Model):
         line = super().create(vals)
         line._create_inspection_lines()
         return line
+    
+
 
     def write(self, vals):
         res = super().write(vals)
@@ -540,6 +806,8 @@ class JobCardLine(models.Model):
         print("Labour===========",self.product_id.labour_charge)
         self.labour_charge = int(self.product_id.labour_charge)
 
+# ========================================================
+    # working
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         if not self.product_uom or not self.product_id:
@@ -564,6 +832,9 @@ class JobCardLine(models.Model):
                 product_currency=self.job_card_id.currency_id
             )
 
+    
+
+    # =======================================================
     def _prepare_base_line_for_taxes_computation(self, **kwargs):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
         defined on account.tax.
@@ -588,16 +859,15 @@ class JobCardLine(models.Model):
         job_card = self.env['job.card'].browse(
             self.env.context.get('order_id'))
         return job_card.action_add_from_catalog()
+    
 
     def _get_product_catalog_lines_data(self):
         catalog_info = {
             'quantity': self.product_uom_qty,
             'price': self.price_unit,
+            
         }
         return catalog_info
-
-    
-    
     
     
 class JobCardImage(models.Model):

@@ -32,6 +32,11 @@
             'report/job_card_only_inspection.xml',
             # 'views/assets.xml',
     ],
+    # 'assets': {
+    # 'web.assets_backend': [
+    #     'car_repair_services/static/src/js/catalog.js',
+    # ]
+    # },
     
     'installable': True,
     'application': True,

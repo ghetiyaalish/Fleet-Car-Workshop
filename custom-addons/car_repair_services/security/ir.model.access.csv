@@ -19,3 +19,4 @@ access_post_inspection_list,access_post_inspection_list,model_post_inspection_li
 access_product_location,access_product_location,model_product_location,base.group_user,1,1,1,1
 access_insurance_provider,access_insurance_provider,model_insurance_provider,base.group_user,1,1,1,1
 access_insurance_type,access_insurance_type,model_insurance_type,base.group_user,1,1,1,1
+access_job_card_line_inspection,job.card.line.inspection,model_job_card_line_inspection,base.group_user,1,1,1,1
